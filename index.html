@@ -436,11 +436,11 @@ body.hlg .pav,body.hlg .avs{background:#fff var(--logo) center/78% no-repeat!imp
 .kdhl{height:18mm;width:auto;max-width:60mm;object-fit:contain}.dhd{padding-top:6mm!important}.lgim{height:74px;width:auto;max-width:200px;object-fit:contain;margin-bottom:10px}.pvlg{height:46px;width:auto;object-fit:contain}body.hlg .pav,body.hlg .avs{background-size:auto 80%!important}
 .kdprev{zoom:.6;margin:6px auto 4px;border-radius:6px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.18);width:210mm;max-width:none}.kdprev .kdc{box-shadow:none}@media(max-width:760px){.kdprev{zoom:.4}}
 .dtb td,.dtb th{white-space:normal!important;overflow-wrap:anywhere;word-break:normal}.dtb td{padding:8px 8px}.dtb td:first-child,.dtb th:first-child{padding-left:10mm}.dtb td:last-child,.dtb th:last-child{padding-right:10mm}
-</style><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+</style><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.58.0/dist/umd/supabase.min.js" onerror="var x=document.createElement('script');x.src='https://unpkg.com/@supabase/supabase-js@2.58.0/dist/umd/supabase.min.js';document.head.appendChild(x)"></script>
 </head><body><div class="app"><aside class="side"><div class="prof" role="button" tabindex="0" title="Private area" onclick="pfM()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();pfM()}"><div class="pav">KG<span class="pk" id="pk"></span></div><b>Kawya Group</b><small>Concrete · Hardware · Transport</small></div><nav class="nav" id="nav"></nav><div class="dl"><button class="arr" onclick="hp()" title="Quick guide"><svg class="i" viewBox="0 0 24 24"><path d="M7 17L17 7M8 7h9v9"/></svg></button>Need help?<br>Open the quick guide<button class="bk" onclick="bk()"><svg class="i" viewBox="0 0 24 24" style="width:15px;height:15px"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></svg>Download backup</button></div></aside><main class="mn"><div class="top"><div class="tl"><h1 id="ttl"></h1><p id="sub"></p></div><div class="tr"><div class="srch"><svg class="i" viewBox="0 0 24 24" style="width:16px;height:16px"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input id="gs" placeholder="Search customer by NIC, name or phone" oninput="gsr(this)" onfocus="gsf(this)"></div><button class="ib" id="bl" title="Notifications" onclick="nf()"><svg class="i" viewBox="0 0 24 24" style="width:17px;height:17px"><path d="M6 17V11a6 6 0 1112 0v6l1.5 2h-15zM10 21h4"/></svg></button><button class="ib" id="thb" title="Light / dark" onclick="tg()"></button><button class="b ncb" onclick="go('bill')">Create new bill</button><div class="avs">KG</div></div></div><div id="main"></div></main></div><div id="mdl"></div><div id="tdw"></div><div id="pvw"></div>
 <script>
 /* ===== ONLINE DATABASE SETTINGS: paste your Supabase values between the quotes (see SETUP.md). Leave empty to keep working on this computer only. ===== */
-const KG_SB={url:'',key:''};
+const KG_SB={url:'https://zillkfpjontaswunagho.supabase.co',key:'sb_publishable_nznUG7Qv5IYbAMUSiV5J3Q_Muy4UZd5'};
 var SB_ON=false,RG={};
 const $=i=>document.getElementById(i),v=i=>$(i).value.trim(),K='kawya1',D=()=>new Date().toLocaleDateString('en-CA'),f=n=>'Rs. '+(+n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
 let S,tab='home',WO=0,Q='',B=[],sub={t:'wait',s:'daily',p:'pend',f:'today'};
@@ -1341,7 +1341,7 @@ function zLogoApply(){const C=S.co,r=document.documentElement;if(C.logo)r.style.
 zLogoApply();zLogoPrep();
 
 /* ---- Online database (Supabase) : shared data + real sign-in ---- */
-SB_ON=!!(KG_SB.url&&KG_SB.key&&window.supabase);
+SB_ON=!!(KG_SB.url&&KG_SB.key);
 let SB=null,SBT=0,SBLP={},SBID=Math.random().toString(36).slice(2,8);
 function sbSt(k,m){let e=$('sbst');if(!e){e=document.createElement('div');e.id='sbst';e.style.cssText='position:fixed;left:12px;bottom:10px;z-index:12;font:600 11px Inter,system-ui,sans-serif;padding:5px 10px;border-radius:99px;background:var(--card,#fff);box-shadow:0 2px 10px rgba(0,0,0,.15);color:var(--mut,#666);pointer-events:none';document.body.appendChild(e)}
  const c={ok:['#2e9e55','Saved online'],sv:['#e0a000','Saving...'],er:['#c0392b','Not saved - '+(m||'offline')+'. Do not close the page.'],off:['#c0392b','Connection lost, reconnecting...']}[k];e.innerHTML=`<span style="color:${c[0]}">&#9679;</span> ${es(c[1])}`}
@@ -1375,11 +1375,11 @@ function sbLive(){if(SBCH)return;SBCH=SB.channel('kg-state').on('postgres_change
 async function sbResync(){SBRT=0;try{const {data}=await SB.from('app_state').select('key,value');(data||[]).forEach(r=>{const j=JSON.stringify(r.value);if(SBLP[r.key]!==j&&JSON.stringify(S[r.key])===SBLP[r.key]){S[r.key]=r.value;SBLP[r.key]=j}});sbRe()}catch(e){}}
 function sbRe(){clearTimeout(sbRe.t);const a=document.activeElement;if(a&&/INPUT|TEXTAREA|SELECT/.test(a.tagName)&&!$('sbg')){sbRe.t=setTimeout(sbRe,2500);return}try{render()}catch(e){}}
 if(SB_ON){
- SB=window.supabase.createClient(KG_SB.url,KG_SB.key,{auth:{persistSession:true,autoRefreshToken:true}});
  for(const k of Object.keys(USERS))delete USERS[k];
- {const _so=sOut;sOut=function(auto){if(auto){sbOut();return}sbOut()}}
- document.body.style.visibility='visible';
- (async()=>{const {data}=await SB.auth.getSession();if(data&&data.session)sbStart();else sbGate('')})();
+ {const _so=sOut;sOut=function(auto){sbOut()}}
+ const boot=()=>{SB=window.supabase.createClient(KG_SB.url,KG_SB.key,{auth:{persistSession:true,autoRefreshToken:true}});
+  (async()=>{const {data}=await SB.auth.getSession();if(data&&data.session)sbStart();else sbGate('')})()};
+ if(window.supabase)boot();else{sbGate('Loading...',1);let n=0;const t=setInterval(()=>{if(window.supabase){clearInterval(t);boot()}else if(++n>75){clearInterval(t);sbGate('Could not load the sign-in system. Check the internet and reload the page.')}},200)}
 }
 
 /* ---- Automatic daily backup ---- */
