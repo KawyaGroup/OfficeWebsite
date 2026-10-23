@@ -445,7 +445,7 @@ var SB_ON=false,RG={};
 const $=i=>document.getElementById(i),v=i=>$(i).value.trim(),K='kawya1',D=()=>new Date().toLocaleDateString('en-CA'),f=n=>'Rs. '+(+n||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
 let S,tab='home',WO=0,Q='',B=[],sub={t:'wait',s:'daily',p:'pend',f:'today'};
 try{S=JSON.parse(localStorage.getItem(K))}catch(e){}
-S=S||{n:1,cu:{},bl:[],st:[{n:'Cement bag (50kg)',c:'Hardware',q:120,u:'bag',p:2300,k:2000,r:30},{n:'Hollow block 6 inch',c:'Concrete yard',q:800,u:'pcs',p:140,k:105,r:100},{n:'Concrete culvert pipe',c:'Concrete yard',q:40,u:'pcs',p:6500,k:5000,r:10},{n:'Steel rod 12mm',c:'Hardware',q:200,u:'pcs',p:3800,k:3400,r:40}],sl:[],fl:{d:[],a:[],v:[]},wk:[],sp:[],pay:[]};
+S=S||{n:1,cu:{},bl:[],st:[],sl:[],fl:{d:[],a:[],v:[]},wk:[],sp:[],pay:[]};
 const P=()=>{try{localStorage.setItem(K,JSON.stringify(S))}catch(e){}if(typeof sbQ=='function')sbQ()},pd=b=>b.pays.reduce((s,p)=>s+p.a,0),nt=b=>b.total+(+b.tf||0)+(b.xt||0)-(b.ret||0),bal=b=>nt(b)-pd(b),inC=b=>b.m=='Cheque'&&b.ch.st=='Pending',ph=n=>{n=String(n).replace(/\D/g,'');return n[0]=='0'?'94'+n.slice(1):n},wa=(p,t)=>window.open('https://wa.me/'+ph(p)+'?text='+encodeURIComponent(t),'_blank');
 const PRIV=['cust','fleet','fin'],USERS={erandi:{n:'Erandi',r:'staff',h:'bf29080d91454587ba82bfa4cb3ee7abf0fdbe2b0e672a103768c001b467f808'},kawya:{n:'Kawya',r:'owner',h:'75e259448b67fb084fe6b0975bb08d30ac87acc41e75b29127454d6fb09d220c'},kumara:{n:'Kumara',r:'owner',h:'e16a4f016190923db93a165722dfeffbaa8c7da38830c2bff11ee67fb290585c'}};
 let U=null,FA=0,FU=0,IT,PEND=null;
@@ -1422,6 +1422,9 @@ function rgLbl(k){const r=RG[k]||{m:'latest'};return r.m=='pick'?(r.a||'start')+
 function rgF(k,arr,n,fl){fl=fl||(x=>x.d);const r=RG[k]||{m:'latest'},t=D(),d=x=>String(fl(x)||'').slice(0,10);let a=arr.slice();
  if(r.m=='latest')a=a.slice(-n);else if(r.m!='all'){const lo=r.m=='today'?t:r.m=='week'?dAgo(6):r.m=='month'?t.slice(0,7)+'-01':r.m=='q'?dAgo(92):r.m=='year'?t.slice(0,4)+'-01-01':(r.a||'0000'),hi=r.m=='pick'?(r.b||'9999'):'9999';a=a.filter(x=>d(x)>=lo&&d(x)<=hi)}
  return a.reverse()}
+
+/* one-time: remove the 4 sample stock items that came with the first version */
+if(!S.nosmp){const sm=['Cement bag (50kg)','Hollow block 6 inch','Concrete culvert pipe','Steel rod 12mm'];if(S.st&&S.st.length==4&&S.st.every((x,i)=>x.n==sm[i])&&!(S.bl||[]).length&&!(S.pu||[]).length&&!(S.sl||[]).length)S.st=[];S.nosmp=1;P()}
 
 if(!SB_ON)render();else{try{render()}catch(e){}}
 </script></body></html>
