@@ -983,7 +983,7 @@ const _bO=bwO;bwO=function(){BSP=BS;_bO()};
 /* ===== Attendance + Salary (fingerprint machine, Poya days, payroll) ===== */
 const PS0={rate:2500,free:5,pen:100,epf:[750,750,500],pp:1,hh:5};
 S.ps=Object.assign({},PS0,S.ps||{});if(!Array.isArray(S.ps.epf)||S.ps.epf.length<3)S.ps.epf=PS0.epf.slice();
-['py','px','pa','pj','sb','col','sc','un'].forEach(k=>{S[k]=S[k]||[]});S.at=S.at||{};S.sbn=S.sbn||1;
+['py','px','pa','pj','sb','col','sc','un'].forEach(k=>{S[k]=S[k]||[]});S.at=(S.at&&!Array.isArray(S.at))?S.at:{};S.sbn=S.sbn||1;
 S.br=Object.assign({url:'http://localhost:8787',on:0,seq:0,from:''},S.br||{});
 const zp=n=>String(n).padStart(2,'0'),zNow=()=>{const d=new Date();return D()+' '+zp(d.getHours())+':'+zp(d.getMinutes())+':'+zp(d.getSeconds())},
  zMd=m=>{const[y,o]=m.split('-').map(Number),n=new Date(y,o,0).getDate();return[...Array(n)].map((_,i)=>m+'-'+zp(i+1))},
