@@ -1341,25 +1341,26 @@ function zLogoApply(){const C=S.co,r=document.documentElement;if(C.logo)r.style.
 zLogoApply();zLogoPrep();
 
 /* ---- Online database (Supabase) : shared data + real sign-in ---- */
+const SBMAIL={kawya:'kawyasniroshana@gmail.com',kumara:'kumara@kumara.lk',erandi:'erandi@erandi.lk'};let SBV=null;
 SB_ON=!!(KG_SB.url&&KG_SB.key);
-let SB=null,SBT=0,SBLP={},SBID=Math.random().toString(36).slice(2,8);
+let SBP=null,SB=null,SBT=0,SBLP={},SBID=Math.random().toString(36).slice(2,8);
 function sbSt(k,m){let e=$('sbst');if(!e){e=document.createElement('div');e.id='sbst';e.style.cssText='position:fixed;left:12px;bottom:10px;z-index:12;font:600 11px Inter,system-ui,sans-serif;padding:5px 10px;border-radius:99px;background:var(--card,#fff);box-shadow:0 2px 10px rgba(0,0,0,.15);color:var(--mut,#666);pointer-events:none';document.body.appendChild(e)}
  const c={ok:['#2e9e55','Saved online'],sv:['#e0a000','Saving...'],er:['#c0392b','Not saved - '+(m||'offline')+'. Do not close the page.'],off:['#c0392b','Connection lost, reconnecting...']}[k];e.innerHTML=`<span style="color:${c[0]}">&#9679;</span> ${es(c[1])}`}
-function sbQ(){if(!SB_ON||!U)return;clearTimeout(SBT);sbSt('sv');SBT=setTimeout(sbFlush,500)}
-async function sbFlush(){clearTimeout(SBT);if(!SB_ON||!U)return;const rows=[],js={};for(const k of Object.keys(S)){const j=JSON.stringify(S[k]);if(j===undefined||SBLP[k]===j)continue;rows.push({key:k,value:S[k],updated_by:U.k+'#'+SBID});js[k]=j}
+function sbQ(){if(!SB_ON||!SBP)return;clearTimeout(SBT);sbSt('sv');SBT=setTimeout(sbFlush,500)}
+async function sbFlush(){clearTimeout(SBT);if(!SB_ON||!SBP)return;const rows=[],js={};for(const k of Object.keys(S)){const j=JSON.stringify(S[k]);if(j===undefined||SBLP[k]===j)continue;rows.push({key:k,value:S[k],updated_by:SBP.k+'#'+SBID});js[k]=j}
  if(!rows.length){sbSt('ok');return}
  try{const {error}=await SB.from('app_state').upsert(rows);if(error)throw error;rows.forEach(r=>SBLP[r.key]=js[r.key]);sbSt('ok')}catch(e){sbSt('er',String(e.message||e).slice(0,60));SBT=setTimeout(sbFlush,5000)}}
 function sbGate(msg,busy){let g=$('sbg');if(!g){g=document.createElement('div');g.id='sbg';document.body.appendChild(g)}
- g.innerHTML=`<div class="lgo show" style="z-index:999;background:var(--bg,#f2f2f6)"><div class="lgc">${S.co&&S.co.logo?`<img class="lgim" src="${S.co.logo}" alt="">`:''}<h2>Sign in</h2><p class="mu">Kawya Enterprises</p><div class="lgf"><input id="sbe" type="email" placeholder="Email" autocomplete="username" autocapitalize="none" onkeydown="if(event.key==='Enter')$('sbp').focus()"></div><div class="lgf"><input id="sbp" type="password" placeholder="Password" autocomplete="current-password" onkeydown="if(event.key==='Enter')sbIn()"></div><div class="err" id="sbm">${es(msg||'')}</div><button class="lgb" ${busy?'disabled':''} onclick="sbIn()">${busy?'Please wait...':'Sign in'}</button></div></div>`;
+ g.innerHTML=`<div class="lgo show" style="z-index:999;background:var(--bg,#f2f2f6)"><div class="lgc">${S.co&&S.co.logo?`<img class="lgim" src="${S.co.logo}" alt="">`:''}<h2>Sign in</h2><p class="mu">Kawya Enterprises</p><div class="lgf"><input id="sbe" type="text" placeholder="Username" autocomplete="username" autocapitalize="none" onkeydown="if(event.key==='Enter')$('sbp').focus()"></div><div class="lgf"><input id="sbp" type="password" placeholder="Password" autocomplete="current-password" onkeydown="if(event.key==='Enter')sbIn()"></div><div class="err" id="sbm">${es(msg||'')}</div><button class="lgb" ${busy?'disabled':''} onclick="sbIn()">${busy?'Please wait...':'Sign in'}</button></div></div>`;
  if(!busy&&!msg){const e=$('sbe');if(e)e.focus()}}
-async function sbIn(){const em=v('sbe'),pw=$('sbp').value;if(!em||!pw){$('sbm').textContent='Enter your email and password.';return}
- $('sbm').textContent='';const {error}=await SB.auth.signInWithPassword({email:em,password:pw});if(error){sbGate('Wrong email or password.');return}await sbStart()}
+async function sbIn(){const un=v('sbe').toLowerCase(),em=SBMAIL[un]||(un.includes('@')?un:''),pw=$('sbp').value;if(!un||!pw){$('sbm').textContent='Enter your username and password.';return}if(!em){$('sbm').textContent='Wrong username or password.';return}
+ $('sbm').textContent='';const {error}=await SB.auth.signInWithPassword({email:em,password:pw});if(error){sbGate('Wrong username or password.');return}await sbStart()}
 async function sbOut(){try{await sbFlush()}catch(e){}try{await SB.auth.signOut()}catch(e){}try{localStorage.removeItem(K)}catch(e){}location.reload()}
 async function sbStart(){sbGate('',1);
  try{const {data:u}=await SB.auth.getUser();if(!u||!u.user)throw 0;
   const {data:pr,error:pe}=await SB.from('profiles').select('username,name,role').eq('id',u.user.id).maybeSingle();if(pe||!pr){await SB.auth.signOut();sbGate('This account is not set up for the site. Ask Kawya.');return}
   const {data:rows,error:re}=await SB.from('app_state').select('key,value');if(re)throw re;
-  U={k:pr.username,n:pr.name,r:pr.role};
+  SBP={k:pr.username,n:pr.name,r:pr.role};
   if(!rows.length){SBLP={};await sbFlushAll()}   // first run: upload this browser's data
   else{const srv={};rows.forEach(r=>srv[r.key]=r.value);const cn=x=>JSON.stringify(x,(k,y)=>y&&typeof y=='object'&&!Array.isArray(y)?Object.keys(y).sort().reduce((q,z)=>(q[z]=y[z],q),{}):y),df=Object.keys(srv).some(k=>cn(S[k])!==cn(srv[k]));
    if(df&&!sessionStorage.getItem('kgsync')){try{const old=localStorage.getItem(K);if(old)localStorage.setItem(K+'_before_sync',old)}catch(e){}
@@ -1376,23 +1377,28 @@ async function sbResync(){SBRT=0;try{const {data}=await SB.from('app_state').sel
 function sbRe(){clearTimeout(sbRe.t);const a=document.activeElement;if(a&&/INPUT|TEXTAREA|SELECT/.test(a.tagName)&&!$('sbg')){sbRe.t=setTimeout(sbRe,2500);return}try{render()}catch(e){}}
 if(SB_ON){
  for(const k of Object.keys(USERS))delete USERS[k];
- {const _so=sOut;sOut=function(auto){sbOut()}}
- const boot=()=>{SB=window.supabase.createClient(KG_SB.url,KG_SB.key,{auth:{persistSession:true,autoRefreshToken:true}});
+ const boot=()=>{SB=window.supabase.createClient(KG_SB.url,KG_SB.key,{auth:{persistSession:true,autoRefreshToken:true,storage:window.sessionStorage}});
+  SBV=window.supabase.createClient(KG_SB.url,KG_SB.key,{auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false,storageKey:'kgv'}});
   (async()=>{const {data}=await SB.auth.getSession();if(data&&data.session)sbStart();else sbGate('')})()};
  if(window.supabase)boot();else{sbGate('Loading...',1);let n=0;const t=setInterval(()=>{if(window.supabase){clearInterval(t);boot()}else if(++n>75){clearInterval(t);sbGate('Could not load the sign-in system. Check the internet and reload the page.')}},200)}
 }
+if(SB_ON){lgIn=async function(){if(Date.now()<FU){$('le').textContent='Too many attempts. Please wait a minute and try again.';return}
+ const k=v('lu').toLowerCase().trim(),p=$('lp').value,em=SBMAIL[k]||(k.includes('@')?k:'');let ok=null;
+ if(em&&p&&SBV){try{const {data,error}=await SBV.auth.signInWithPassword({email:em,password:p});if(!error&&data&&data.user){const r=await SBV.from('profiles').select('username,name,role').eq('id',data.user.id).maybeSingle();if(r.data)ok=r.data}}catch(e){}try{await SBV.auth.signOut()}catch(e){}}
+ if(ok){FA=0;U={k:ok.username,n:ok.name,r:ok.role};X();rs();const w=PEND;PEND=null;tab=w||(U.k=='kawya'&&(S.ar||[]).some(r=>r.st=='Pending')?'apr':U.r=='owner'?'fin':'cust');if(tab=='cfg'&&U.r!='owner')tab='cust';render();return}
+ FA++;if(FA>=5){FA=0;FU=Date.now()+60000;$('le').textContent='Too many attempts. Please wait a minute and try again.'}else $('le').textContent='Wrong username or password.';$('lp').value=''}}
 
 /* ---- Automatic daily backup ---- */
 if(S.bh==null)S.bh=19;
 let BKST='';
 function bkFile(){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(S,null,1)],{type:'application/json'}));a.download='kawya-backup-'+D()+'.json';a.click()}
-async function bkRun(manual){if(!U)return;let ok=true,msg='';
- if(SB_ON){try{await sbFlush();const {error}=await SB.from('backups').upsert({day:D(),data:S,created_by:U.k});if(error)throw error;
-   if(U.r=='owner'){const c=new Date(Date.now()-60*864e5).toLocaleDateString('en-CA'),{data:ds}=await SB.from('backups').select('day').lt('day',c).order('day',{ascending:true});const seen={},del=[];(ds||[]).forEach(r=>{const m=r.day.slice(0,7);if(seen[m])del.push(r.day);else seen[m]=1});if(del.length)await SB.from('backups').delete().in('day',del)}}catch(e){ok=false;msg=String(e.message||e).slice(0,80)}}
- if(ok){try{localStorage.setItem('kgbk',D())}catch(e){}if(U.r=='owner'){let dl='';try{dl=localStorage.getItem('kgdl')}catch(e){}if(manual||dl!=D()){bkFile();try{localStorage.setItem('kgdl',D())}catch(e){}}}
+async function bkRun(manual){if(!SBP)return;let ok=true,msg='';
+ if(SB_ON){try{await sbFlush();const {error}=await SB.from('backups').upsert({day:D(),data:S,created_by:SBP.k});if(error)throw error;
+   if(SBP.r=='owner'){const c=new Date(Date.now()-60*864e5).toLocaleDateString('en-CA'),{data:ds}=await SB.from('backups').select('day').lt('day',c).order('day',{ascending:true});const seen={},del=[];(ds||[]).forEach(r=>{const m=r.day.slice(0,7);if(seen[m])del.push(r.day);else seen[m]=1});if(del.length)await SB.from('backups').delete().in('day',del)}}catch(e){ok=false;msg=String(e.message||e).slice(0,80)}}
+ if(ok){try{localStorage.setItem('kgbk',D())}catch(e){}if(SBP.r=='owner'){let dl='';try{dl=localStorage.getItem('kgdl')}catch(e){}if(manual||dl!=D()){bkFile();try{localStorage.setItem('kgdl',D())}catch(e){}}}
   BKST='Last backup: '+D()+' '+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}else BKST='Backup failed: '+msg;
  if(sub.cf=='bak'&&tab=='cfg')render();return ok}
-function bkTick(){if(!U)return;let last='';try{last=localStorage.getItem('kgbk')}catch(e){}if(last!=D()&&new Date().getHours()>=(+S.bh||19))bkRun()}
+function bkTick(){if(!SBP)return;let last='';try{last=localStorage.getItem('kgbk')}catch(e){}if(last!=D()&&new Date().getHours()>=(+S.bh||19))bkRun()}
 setInterval(bkTick,300000);setTimeout(bkTick,20000);
 function bkHr(){const h=Math.min(Math.max(parseInt(v('bk_h'))||19,0),23);S.bh=h;P();render()}
 async function bkList(){const e=$('bk_l');if(!e)return;if(!SB_ON){e.innerHTML='<p class="mu" style="font-size:13px">Online backups need the online database. A backup file is saved to the owner\'s computer each evening.</p>';return}
