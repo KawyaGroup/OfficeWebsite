@@ -1015,7 +1015,7 @@ function zToast(t){let e=$('ztoast');if(!e){e=document.createElement('div');e.id
 function fpEvent(id,ts,src){id=String(id).trim();if(!id)return;ts=String(ts||zNow()).replace('T',' ').slice(0,19);if(ts.length==16)ts+=':00';
  if(S.sc.some(x=>x.fp==id&&x.t==ts))return'dup';
  if(PW&&!$('mdl').querySelector('#pw_st,#pw_e'))pwEnd();
- if(!PW&&S.pwo&&!S.pwo.scan&&Date.now()-zMs(S.pwo.at)<9e5&&((ZSEQ>0&&zMs(ts)>=zMs(S.pwo.at)-12e4)||(!ZSEQ&&ts>=S.pwo.at))){S.sc.push({t:ts,fp:id,w:0,src:'payout'});S.pwo.scan={id,ts};P();zToast('Scan sent to the salary window');return'pay'}
+ if(!PW&&S.pwo&&S.pwo.no&&!S.pwo.scan&&Date.now()-zMs(S.pwo.at)<9e5&&((ZSEQ>0&&zMs(ts)>=zMs(S.pwo.at)-12e4)||(!ZSEQ&&ts>=S.pwo.at))){S.sc.push({t:ts,fp:id,w:0,src:'payout'});S.pwo.scan={id,ts};P();zToast('Scan sent to the salary window');return'pay'}
  if(PW){if(PW.busy)return'busy';if(ts>=PW.at||(ZSEQ>PW.s0&&zMs(ts)>=zMs(PW.at)-6e5)){S.sc.push({t:ts,fp:id,w:0,src:'payout'});pwEvent(id,ts);return'pay'}}
  const w=S.wdb.find(x=>x.fp!==undefined&&x.fp!==''&&String(x.fp)==id);S.sc.push({t:ts,fp:id,w:w?w.id:0,src:src||'machine'});if(S.sc.length>600)S.sc=S.sc.slice(-600);
  if(w){zScan(w,ts);P();zToast(w.n+' scanned at '+ts.slice(11,16));if(tab=='sal'&&(sub.sl||'list')=='list')render();if(WD&&$('wdwc'))wdR()}
@@ -1030,7 +1030,7 @@ function unSv(){const u=S.un[0],a=$('un_w').value;if(!a){$('un_e').textContent='
 /* ---- Payout by fingerprint ---- */
 function pwOpen(no){const s=S.sb.find(x=>x.no==no);if(!s||s.paid)return;PW={no,at:zNow(),s0:S.br.seq||0};S.pwo={no,at:PW.at,scan:null};P();setTimeout(brPoll,50);const w=zW(s.w)||{};
  fmM({ic:IC.wdb,t:'Waiting for the fingerprint',s:'Ask '+s.wn+' to place a finger on the machine. The salary is released after the machine recognises the person.',e:'pw_e',ok:'Stop waiting',fn:'pwStop()',f:`<div id="pw_st" style="padding:14px;border-radius:16px;background:var(--soft);color:var(--ink);border:1px solid var(--lime);font-weight:600">Waiting for a scan...${w.fp?'':'<br><small>'+es(s.wn)+' has no fingerprint ID yet. A scan from someone else will be treated as another person.</small>'}</div>${zOwn()?`<button class="g s" style="margin-top:12px" onclick="pwSkip()">Paid without a scan (owner only)</button>`:''}`,h:s.wn,meta:[['Bill',s.no],['Month',zMn(s.m)]],rows:[['Fingerprint ID on machine',w.fp||'-']],tot:['Amount to pay',zRs(s.c.pay)]})}
-function pwEnd(){PW=null;if(S.pwo){S.pwo=null;P()}}
+function pwEnd(){PW=null;if(S.pwo&&S.pwo.no){S.pwo={};P()}}
 function pwStop(){pwEnd();X()}
 setInterval(()=>{if(PW&&!PW.busy&&S.pwo&&S.pwo.scan&&S.pwo.no==PW.no){const c=S.pwo.scan;S.pwo.scan=null;P();pwEvent(c.id,c.ts)}},600);
 function pwSkip(){if(!zOwn()||!PW)return;const s=S.sb.find(x=>x.no==PW.no);PW.busy=1;fmM({ic:WN_,t:'Paid without a scan',s:'Only use this when the machine cannot be used. The reason is written on the bill.',e:'pw_e',ok:'Release salary',fn:'pwSkip2()',f:F('ns_r','Why is there no fingerprint?'),h:s.wn,meta:[['Bill',s.no]],rows:[['Approved by',zWho()]],tot:['Amount',zRs(s.c.pay)]})}
@@ -1129,7 +1129,7 @@ function brSet(on){const u=v('br_u').trim().replace(/\/$/,''),f=v('br_f');if(u)S
 function tsSim(){const i=v('ts_i').trim();if(!i){$('ts_e').textContent='Enter a machine ID.';return}const t=v('ts_t');fpEvent(i,t?t.replace('T',' ')+':00':zNow(),'test');P();render()}
 function tsFile(el){const f=el.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{let n=0,sk=0;const from=($('br_f')&&v('br_f')||'');String(r.result).split(/\r?\n/).forEach(l=>{const m=l.match(/(\d+)\D+?(\d{4}-\d\d-\d\d)[ T](\d\d:\d\d)(:\d\d)?/);if(!m)return;const ts=m[2]+' '+m[3]+(m[4]||':00');if(from&&m[2]<from){sk++;return}const a=fpEvent(m[1],ts,'file');if(a=='ok')n++});P();render();zToast(n+' scans loaded'+(sk?', '+sk+' older ones skipped':''))};r.readAsText(f)}
 async function brPoll(){if(!S.br.on)return;try{const r=await fetch(S.br.url.replace(/\/$/,'')+'/events?after='+(S.br.seq||0),{cache:'no-store'}),j=await r.json();ZBS='ok';ZBT=Date.now();if(typeof j.last=='number'&&j.last<(S.br.seq||0)){S.br.seq=0;P()}(j.events||[]).forEach(e=>{S.br.seq=Math.max(S.br.seq||0,e.seq||0);ZSEQ=e.seq||0;const t=String(e.time).replace('T',' ');if(S.br.from&&t<S.br.from)return;{const l=new Date(Date.now()+6e5);if(t>l.toLocaleDateString('en-CA')+' '+l.toLocaleTimeString('en-GB'))return}fpEvent(e.id,t,'machine')});ZSEQ=0;P()}catch(e){ZBS='down'}{const q=$('pw_st');if(q&&PW&&!PW.busy)q.firstChild.textContent=ZBS=='ok'?'Waiting for a scan...':'Cannot reach the fingerprint bridge on this PC. Check that it is running.'}const b=$('brst');if(b){b.textContent=ZBS=='ok'?'Connected':'Bridge not reachable';b.className='tg '+(ZBS=='ok'?'ok':'bad')}}
-setInterval(brPoll,5000);setInterval(()=>{if((PW&&!PW.busy)||(S.pwo&&!S.pwo.scan))brPoll()},1500);
+setInterval(brPoll,5000);setInterval(()=>{if((PW&&!PW.busy)||(S.pwo&&S.pwo.no&&!S.pwo.scan))brPoll()},1500);
 /* ---- Salary page ---- */
 V.sal=()=>{if(!U)return'';const k=sub.sl||'month',tb=[['month','Monthly salary'],['extra','Extra duties'],['adv','Cash advances'],['adj','Additions / deductions'],['rec','Saved bills']];if(zOwn())tb.push(['set','Settings']);
  return tabs('sl',tb)+({month:zSalM,extra:zExtra,adv:zAdv,adj:zAdj,rec:zRec,set:zSet}[k]||zSalM)()};
@@ -1357,7 +1357,7 @@ let SBP=null,SB=null,SBT=0,SBLP={},SBID=Math.random().toString(36).slice(2,8);
 function sbSt(k,m){let e=$('sbst');if(!e){e=document.createElement('div');e.id='sbst';e.style.cssText='position:fixed;left:12px;bottom:10px;z-index:12;font:600 11px Inter,system-ui,sans-serif;padding:5px 10px;border-radius:99px;background:var(--card,#fff);box-shadow:0 2px 10px rgba(0,0,0,.15);color:var(--mut,#666);pointer-events:none';document.body.appendChild(e)}
  const c={ok:['#2e9e55','Saved online'],sv:['#e0a000','Saving...'],er:['#c0392b','Not saved - '+(m||'offline')+'. Do not close the page.'],off:['#c0392b','Connection lost, reconnecting...']}[k];e.innerHTML=`<span style="color:${c[0]}">&#9679;</span> ${es(c[1])}`}
 function sbQ(){if(!SB_ON||!SBP)return;clearTimeout(SBT);sbSt('sv');SBT=setTimeout(sbFlush,500)}
-async function sbFlush(){clearTimeout(SBT);if(!SB_ON||!SBP)return;const rows=[],js={};for(const k of Object.keys(S)){const j=JSON.stringify(S[k]);if(j===undefined||SBLP[k]===j)continue;rows.push({key:k,value:S[k],updated_by:SBP.k+'#'+SBID});js[k]=j}
+async function sbFlush(){clearTimeout(SBT);if(!SB_ON||!SBP)return;const rows=[],js={};for(const k of Object.keys(S)){if(S[k]===null)S[k]={};const j=JSON.stringify(S[k]);if(j===undefined||SBLP[k]===j)continue;rows.push({key:k,value:S[k],updated_by:SBP.k+'#'+SBID});js[k]=j}
  if(!rows.length){sbSt('ok');return}
  try{const {error}=await SB.from('app_state').upsert(rows);if(error)throw error;rows.forEach(r=>SBLP[r.key]=js[r.key]);sbSt('ok')}catch(e){sbSt('er',String(e.message||e).slice(0,60));SBT=setTimeout(sbFlush,5000)}}
 function sbGate(msg,busy){let g=$('sbg');if(!g){g=document.createElement('div');g.id='sbg';document.body.appendChild(g)}
