@@ -225,7 +225,12 @@ table.ct{border-collapse:separate;border-spacing:0}
 .lge{border:0;background:none;color:var(--mut);cursor:pointer;padding:4px;display:grid;place-items:center}.lge:hover{color:var(--ink)}
 .lgc .err{text-align:left;margin:2px 2px 10px}
 .lgb{width:100%;border:0;border-radius:14px;padding:14px;font:700 15px Inter,system-ui,sans-serif;color:#1c1b2e;cursor:pointer;background:var(--lime);box-shadow:inset 0 1px 0 rgba(255,255,255,.45),0 10px 20px -10px var(--lime2)}.lgb:hover{background:var(--lime2)}
-@media(prefers-reduced-motion:reduce){.lgo,.lgc{transition-duration:.01s}.lgc{transform:none}}.lgb{transition:transform .15s ease,background-color .2s,opacity .2s}.lgb:active{transform:scale(.98)}.lgb:disabled,.lgb.busy{opacity:.65;cursor:default}.lgc .err{min-height:18px;transition:opacity .2s}.lgc .err:empty{opacity:0}
+@media(prefers-reduced-motion:reduce){.lgo,.lgc{transition-duration:.01s}.lgc{transform:none}}
+:root{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+:root[data-theme=dark] .lgim,:root[data-theme=dark] .pvlg{filter:brightness(0) invert(.92)}
+.lgf input,.lgf input:focus{color:var(--ink);-webkit-text-fill-color:var(--ink);caret-color:var(--ink);background:none}
+.lgf input:-webkit-autofill,.lgf input:-webkit-autofill:focus{-webkit-text-fill-color:var(--ink);box-shadow:0 0 0 100px var(--soft) inset!important;transition:background-color 9999s}
+.lgf input::placeholder{color:var(--mut);opacity:1}.lgb{transition:transform .15s ease,background-color .2s,opacity .2s}.lgb:active{transform:scale(.98)}.lgb:disabled,.lgb.busy{opacity:.65;cursor:default}.lgc .err{min-height:18px;transition:opacity .2s}.lgc .err:empty{opacity:0}
 .lgl{display:flex;flex-direction:column;gap:10px;margin-bottom:16px}
 .lgr{display:flex;align-items:center;gap:12px;width:100%;border:0;background:var(--soft);color:var(--ink);border-radius:14px;padding:13px 14px;font:600 14px Inter,system-ui,sans-serif;text-align:left;cursor:pointer}.lgr span{flex:1}.lgr svg:last-child{color:var(--mut)}.lgr:hover{background:var(--ln)}
 .mb{z-index:13}
@@ -1009,7 +1014,8 @@ let PW=null,ZBS='idle',ZBT=0,ZSEQ=0;const zMs=t=>new Date(String(t).replace(' ',
 function zToast(t){let e=$('ztoast');if(!e){e=document.createElement('div');e.id='ztoast';document.body.appendChild(e)}e.textContent=t;e.className='show';clearTimeout(e._t);e._t=setTimeout(()=>e.className='',4000)}
 function fpEvent(id,ts,src){id=String(id).trim();if(!id)return;ts=String(ts||zNow()).replace('T',' ').slice(0,19);if(ts.length==16)ts+=':00';
  if(S.sc.some(x=>x.fp==id&&x.t==ts))return'dup';
- if(PW&&!$('mdl').querySelector('#pw_st,#pw_e'))PW=null;
+ if(PW&&!$('mdl').querySelector('#pw_st,#pw_e'))pwEnd();
+ if(!PW&&S.pwo&&!S.pwo.scan&&Date.now()-zMs(S.pwo.at)<9e5&&((ZSEQ>0&&zMs(ts)>=zMs(S.pwo.at)-12e4)||(!ZSEQ&&ts>=S.pwo.at))){S.sc.push({t:ts,fp:id,w:0,src:'payout'});S.pwo.scan={id,ts};P();zToast('Scan sent to the salary window');return'pay'}
  if(PW){if(PW.busy)return'busy';if(ts>=PW.at||(ZSEQ>PW.s0&&zMs(ts)>=zMs(PW.at)-6e5)){S.sc.push({t:ts,fp:id,w:0,src:'payout'});pwEvent(id,ts);return'pay'}}
  const w=S.wdb.find(x=>x.fp!==undefined&&x.fp!==''&&String(x.fp)==id);S.sc.push({t:ts,fp:id,w:w?w.id:0,src:src||'machine'});if(S.sc.length>600)S.sc=S.sc.slice(-600);
  if(w){zScan(w,ts);P();zToast(w.n+' scanned at '+ts.slice(11,16));if(tab=='sal'&&(sub.sl||'list')=='list')render();if(WD&&$('wdwc'))wdR()}
@@ -1022,9 +1028,11 @@ function unSv(){const u=S.un[0],a=$('un_w').value;if(!a){$('un_e').textContent='
  if(a!='none'){const w=zW(a);w.fp=u.id;const sc=S.sc.filter(x=>x.fp==u.id&&!x.w);sc.forEach(x=>{x.w=w.id;zScan(w,x.t)})}else S.col.push({id:u.id,n:'(ignored)',rel:'Ignored',fw:0,on:zNow(),by:zWho()});
  S.un.shift();P();X();render();setTimeout(zAsk,300)}
 /* ---- Payout by fingerprint ---- */
-function pwOpen(no){const s=S.sb.find(x=>x.no==no);if(!s||s.paid)return;PW={no,at:zNow(),s0:S.br.seq||0};setTimeout(brPoll,50);const w=zW(s.w)||{};
- fmM({ic:IC.wdb,t:'Waiting for the fingerprint',s:'Ask '+s.wn+' to place a finger on the machine. The salary is released after the machine recognises the person.',e:'pw_e',ok:'Stop waiting',fn:'pwStop()',f:`<div id="pw_st" style="padding:14px;border-radius:16px;background:#e8f5d8;font-weight:600">Waiting for a scan...${w.fp?'':'<br><small>'+es(s.wn)+' has no fingerprint ID yet. A scan from someone else will be treated as another person.</small>'}</div>${zOwn()?`<button class="g s" style="margin-top:12px" onclick="pwSkip()">Paid without a scan (owner only)</button>`:''}`,h:s.wn,meta:[['Bill',s.no],['Month',zMn(s.m)]],rows:[['Fingerprint ID on machine',w.fp||'-']],tot:['Amount to pay',zRs(s.c.pay)]})}
-function pwStop(){PW=null;X()}
+function pwOpen(no){const s=S.sb.find(x=>x.no==no);if(!s||s.paid)return;PW={no,at:zNow(),s0:S.br.seq||0};S.pwo={no,at:PW.at,scan:null};P();setTimeout(brPoll,50);const w=zW(s.w)||{};
+ fmM({ic:IC.wdb,t:'Waiting for the fingerprint',s:'Ask '+s.wn+' to place a finger on the machine. The salary is released after the machine recognises the person.',e:'pw_e',ok:'Stop waiting',fn:'pwStop()',f:`<div id="pw_st" style="padding:14px;border-radius:16px;background:var(--soft);color:var(--ink);border:1px solid var(--lime);font-weight:600">Waiting for a scan...${w.fp?'':'<br><small>'+es(s.wn)+' has no fingerprint ID yet. A scan from someone else will be treated as another person.</small>'}</div>${zOwn()?`<button class="g s" style="margin-top:12px" onclick="pwSkip()">Paid without a scan (owner only)</button>`:''}`,h:s.wn,meta:[['Bill',s.no],['Month',zMn(s.m)]],rows:[['Fingerprint ID on machine',w.fp||'-']],tot:['Amount to pay',zRs(s.c.pay)]})}
+function pwEnd(){PW=null;if(S.pwo){S.pwo=null;P()}}
+function pwStop(){pwEnd();X()}
+setInterval(()=>{if(PW&&!PW.busy&&S.pwo&&S.pwo.scan&&S.pwo.no==PW.no){const c=S.pwo.scan;S.pwo.scan=null;P();pwEvent(c.id,c.ts)}},600);
 function pwSkip(){if(!zOwn()||!PW)return;const s=S.sb.find(x=>x.no==PW.no);PW.busy=1;fmM({ic:WN_,t:'Paid without a scan',s:'Only use this when the machine cannot be used. The reason is written on the bill.',e:'pw_e',ok:'Release salary',fn:'pwSkip2()',f:F('ns_r','Why is there no fingerprint?'),h:s.wn,meta:[['Bill',s.no]],rows:[['Approved by',zWho()]],tot:['Amount',zRs(s.c.pay)]})}
 function pwSkip2(){const s=S.sb.find(x=>x.no==PW.no),r=v('ns_r').trim();if(!r){$('pw_e').textContent='Write the reason.';return}zPaid(s,{k:'noscan',n:zWho(),rel:'Paid without scan: '+r,fp:'',t:zNow()})}
 function pwEvent(id,ts){const s=S.sb.find(x=>x.no==PW.no),w=zW(s.w);
@@ -1037,7 +1045,7 @@ function pwEvent(id,ts){const s=S.sb.find(x=>x.no==PW.no),w=zW(s.w);
  fmM({ic:WN_,t:'This is not the worker, who is this?',s:'The machine recognised a fingerprint that is not '+s.wn+'. Enter who is collecting the salary. The fingerprint is saved so the site knows this person next time.',e:'pw_e',ok:'Save and release salary',fn:'pwNew()',f:F('pc_n','Name of this person')+`<label>Relationship to ${es(s.wn)}<select id="pc_r"><option>Wife<option>Husband<option>Mother<option>Father<option>Brother<option>Sister<option>Son<option>Daughter<option>Friend<option>Other</select></label>`+F('pc_p','Phone (optional)','tel'),h:s.wn,meta:[['Machine ID',id]],rows:[['Bill',s.no]],tot:['Amount',zRs(s.c.pay)]})}
 function pwYes(){const s=S.sb.find(x=>x.no==PW.no);zPaid(s,PW.cand)}
 function pwNew(){const s=S.sb.find(x=>x.no==PW.no),n=v('pc_n').trim();if(!n){$('pw_e').textContent='Enter the name.';return}const r=$('pc_r').value;S.col.push({id:PW.id,n,rel:r,ph:v('pc_p'),fw:s.w,on:zNow(),by:zWho()});zPaid(s,{k:'other',fp:PW.id,n,rel:r+' of '+s.wn,t:PW.ts})}
-function zPaid(s,col){s.paid=1;s.pt=zNow();s.col=col;s.rb=zWho();PW=null;if(s.c.pay>0)S.pay.push({d:D(),w:s.wn,g:s.c.gross,ded:s.c.gross-s.c.pay,net:s.c.pay,sl:s.no});P();X();render();
+function zPaid(s,col){s.paid=1;s.pt=zNow();s.col=col;s.rb=zWho();pwEnd();if(s.c.pay>0)S.pay.push({d:D(),w:s.wn,g:s.c.gross,ded:s.c.gross-s.c.pay,net:s.c.pay,sl:s.no});P();X();render();
  okM({t:'Salary released',s:s.c.pay>0?'The salary was handed over and the bill is marked as paid.':'Nothing to pay. The negative balance is carried to next month.',h:s.wn,meta:[['Bill',s.no],['Month',zMn(s.m)]],rows:[['Collected by',col.n],['Proof',col.k=='worker'?'Fingerprint matched the worker':col.k=='other'?'Fingerprint of '+col.rel:col.rel],['Released by',zWho()]],tot:['Paid',zRs(s.c.pay)]})}
 /* ---- Salary calculation ---- */
 function zCalc(w,m){const R=S.ps,rate=w.r||R.rate,ds=zMd(m);let P_=0,H=0,A=0,O=0;const ab=[];
@@ -1121,7 +1129,7 @@ function brSet(on){const u=v('br_u').trim().replace(/\/$/,''),f=v('br_f');if(u)S
 function tsSim(){const i=v('ts_i').trim();if(!i){$('ts_e').textContent='Enter a machine ID.';return}const t=v('ts_t');fpEvent(i,t?t.replace('T',' ')+':00':zNow(),'test');P();render()}
 function tsFile(el){const f=el.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{let n=0,sk=0;const from=($('br_f')&&v('br_f')||'');String(r.result).split(/\r?\n/).forEach(l=>{const m=l.match(/(\d+)\D+?(\d{4}-\d\d-\d\d)[ T](\d\d:\d\d)(:\d\d)?/);if(!m)return;const ts=m[2]+' '+m[3]+(m[4]||':00');if(from&&m[2]<from){sk++;return}const a=fpEvent(m[1],ts,'file');if(a=='ok')n++});P();render();zToast(n+' scans loaded'+(sk?', '+sk+' older ones skipped':''))};r.readAsText(f)}
 async function brPoll(){if(!S.br.on)return;try{const r=await fetch(S.br.url.replace(/\/$/,'')+'/events?after='+(S.br.seq||0),{cache:'no-store'}),j=await r.json();ZBS='ok';ZBT=Date.now();if(typeof j.last=='number'&&j.last<(S.br.seq||0)){S.br.seq=0;P()}(j.events||[]).forEach(e=>{S.br.seq=Math.max(S.br.seq||0,e.seq||0);ZSEQ=e.seq||0;const t=String(e.time).replace('T',' ');if(S.br.from&&t<S.br.from)return;{const l=new Date(Date.now()+6e5);if(t>l.toLocaleDateString('en-CA')+' '+l.toLocaleTimeString('en-GB'))return}fpEvent(e.id,t,'machine')});ZSEQ=0;P()}catch(e){ZBS='down'}{const q=$('pw_st');if(q&&PW&&!PW.busy)q.firstChild.textContent=ZBS=='ok'?'Waiting for a scan...':'Cannot reach the fingerprint bridge on this PC. Check that it is running.'}const b=$('brst');if(b){b.textContent=ZBS=='ok'?'Connected':'Bridge not reachable';b.className='tg '+(ZBS=='ok'?'ok':'bad')}}
-setInterval(brPoll,5000);setInterval(()=>{if(PW&&!PW.busy)brPoll()},1500);
+setInterval(brPoll,5000);setInterval(()=>{if((PW&&!PW.busy)||(S.pwo&&!S.pwo.scan))brPoll()},1500);
 /* ---- Salary page ---- */
 V.sal=()=>{if(!U)return'';const k=sub.sl||'month',tb=[['month','Monthly salary'],['extra','Extra duties'],['adv','Cash advances'],['adj','Additions / deductions'],['rec','Saved bills']];if(zOwn())tb.push(['set','Settings']);
  return tabs('sl',tb)+({month:zSalM,extra:zExtra,adv:zAdv,adj:zAdj,rec:zRec,set:zSet}[k]||zSalM)()};
