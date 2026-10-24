@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Kawya Group</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"><style>
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Kawya Group</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"><style>
 :root{box-sizing:border-box;--bg:#f6f5f0;--panel:#f6f5f0;--card:#fff;--soft:#f4f3ee;--ink:#1c1b2e;--mut:#8f8e9c;--ln:#eceae4;--lime:#d9f27b;--lime2:#c8e65a;--yel:#f5b83d;--navy:#1e1d2d;--peach:#fde0d2;--barc:#1e1d2d;--ok:#2f9e5b;--bad:#d2541b;--shadow:rgba(0,0,0,0)}
 @media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#1e2227;--panel:#252a31;--card:#2d333b;--soft:#353c45;--ink:#dfe3e8;--mut:#9aa4af;--ln:#3b434d;--lime:#bfd77a;--lime2:#adc666;--yel:#d9a94f;--navy:#1a1e23;--peach:#4a3d36;--barc:#7f93b8;--ok:#6dbb8a;--bad:#e08a62;--shadow:rgba(0,0,0,0)}}
 :root[data-theme=dark]{--bg:#1e2227;--panel:#252a31;--card:#2d333b;--soft:#353c45;--ink:#dfe3e8;--mut:#9aa4af;--ln:#3b434d;--lime:#bfd77a;--lime2:#adc666;--yel:#d9a94f;--navy:#1a1e23;--peach:#4a3d36;--barc:#7f93b8;--ok:#6dbb8a;--bad:#e08a62;--shadow:rgba(0,0,0,0)}
@@ -155,9 +155,9 @@ table.ct{border-collapse:separate;border-spacing:0}
 .j6{display:flex;flex-direction:column;gap:6px;align-items:stretch}.j6 button{white-space:nowrap}
 @container (max-width:1000px){.tj{grid-template-columns:repeat(3,minmax(0,1fr));grid-template-areas:"a a b" "c d e" "f f f"}.j6{flex-direction:row;flex-wrap:wrap}}
 @container (max-width:540px){.tj{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-areas:"a a" "b c" "d d" "e e" "f f"}}
-.tdo{position:fixed;inset:0;z-index:12;display:flex;align-items:center;justify-content:center;padding:clamp(10px,3vw,40px);background:rgba(16,14,30,0);-webkit-backdrop-filter:blur(0) saturate(1);backdrop-filter:blur(0) saturate(1);transition:background .5s cubic-bezier(.22,1,.36,1),backdrop-filter .5s cubic-bezier(.22,1,.36,1),-webkit-backdrop-filter .5s cubic-bezier(.22,1,.36,1)}
-.tdo.show{background:rgba(16,14,30,.3);-webkit-backdrop-filter:blur(24px) saturate(1.6);backdrop-filter:blur(24px) saturate(1.6)}
-.tdw{width:min(1120px,100%);max-height:100%;overflow-y:auto;background:var(--panel);color:var(--ink);border-radius:34px;padding:22px;box-shadow:0 50px 120px -30px rgba(0,0,0,.5);opacity:0;transform:translateY(28px) scale(.94);transition:transform .6s cubic-bezier(.22,1,.36,1),opacity .4s ease;scrollbar-width:thin}
+.tdo{position:fixed;inset:0;z-index:12;display:flex;align-items:center;justify-content:center;padding:clamp(10px,3vw,40px);background:rgba(16,14,30,.3);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);opacity:0;transition:opacity .32s ease;will-change:opacity}
+.tdo.show{opacity:1}
+.tdw{width:min(1120px,100%);max-height:100%;overflow-y:auto;background:var(--panel);color:var(--ink);border-radius:34px;padding:22px;box-shadow:0 50px 120px -30px rgba(0,0,0,.5);opacity:0;transform:translateY(22px) scale(.96);transition:transform .5s cubic-bezier(.22,1,.36,1),opacity .32s ease;scrollbar-width:thin;will-change:transform,opacity}
 .tdo.show .tdw{opacity:1;transform:none}
 @media(prefers-reduced-motion:reduce){.tdo,.tdw{transition-duration:.01s}.tdw{transform:none}}
 .tdh{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:2px 4px 18px}.tdh h2{margin:0;font-size:22px}.tdh small{color:var(--mut);font-size:13px}.tdhr{display:flex;align-items:center;gap:10px}
@@ -213,9 +213,9 @@ table.ct{border-collapse:separate;border-spacing:0}
 .hba{display:flex;gap:8px;flex-wrap:wrap}
 .tjm{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;border:0;background:var(--soft);color:var(--ink);font:inherit;text-align:left;border-radius:14px;padding:10px 12px;cursor:pointer;margin-bottom:6px}.tjm:hover{background:var(--ln)}.tjm b{display:block;font-size:13px}.tjm small{color:var(--mut);font-size:12px;display:block}
 @media(max-width:900px){.cdg{grid-template-columns:minmax(0,1fr);grid-template-areas:"pf" "hs" "pg" "tr"}.chl{max-height:none}}
-.lgo{position:fixed;inset:0;z-index:14;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(16,14,30,0);-webkit-backdrop-filter:blur(0) saturate(1);backdrop-filter:blur(0) saturate(1);transition:background .5s cubic-bezier(.22,1,.36,1),backdrop-filter .5s cubic-bezier(.22,1,.36,1),-webkit-backdrop-filter .5s cubic-bezier(.22,1,.36,1)}
-.lgo.show{background:rgba(16,14,30,.22);-webkit-backdrop-filter:blur(26px) saturate(1.6);backdrop-filter:blur(26px) saturate(1.6)}
-.lgc{position:relative;width:min(420px,100%);border-radius:32px;padding:34px 30px 28px;text-align:center;color:var(--ink);background:var(--card);background:linear-gradient(180deg,color-mix(in srgb,var(--lime) 38%,var(--card)),var(--card) 52%);border:1px solid rgba(255,255,255,.55);box-shadow:0 40px 90px -30px rgba(0,0,0,.45);opacity:0;transform:translateY(24px) scale(.95);transition:transform .6s cubic-bezier(.22,1,.36,1),opacity .4s ease}
+.lgo{position:fixed;inset:0;z-index:14;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(16,14,30,.22);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);opacity:0;transition:opacity .3s ease;will-change:opacity}
+.lgo.show{opacity:1}.lgo.sbgate{-webkit-backdrop-filter:none;backdrop-filter:none;transition:opacity .35s ease}.lgo.sbgate.out{opacity:0;pointer-events:none}
+.lgc{position:relative;width:min(420px,100%);border-radius:32px;padding:34px 30px 28px;text-align:center;color:var(--ink);background:var(--card);background:linear-gradient(180deg,color-mix(in srgb,var(--lime) 38%,var(--card)),var(--card) 52%);border:1px solid rgba(255,255,255,.55);box-shadow:0 40px 90px -30px rgba(0,0,0,.45);opacity:0;transform:translateY(18px) scale(.97);transition:transform .45s cubic-bezier(.22,1,.36,1),opacity .3s ease;will-change:transform,opacity}
 .lgo.show .lgc{opacity:1;transform:none}
 .lgc h2{margin:16px 0 6px;font-size:24px}.lgc p{margin:0 0 22px;font-size:14px;line-height:1.5}
 .lgi{width:60px;height:60px;border-radius:18px;background:var(--card);color:var(--ink);display:grid;place-items:center;margin:0 auto;box-shadow:0 10px 24px -8px rgba(0,0,0,.28)}
@@ -225,7 +225,7 @@ table.ct{border-collapse:separate;border-spacing:0}
 .lge{border:0;background:none;color:var(--mut);cursor:pointer;padding:4px;display:grid;place-items:center}.lge:hover{color:var(--ink)}
 .lgc .err{text-align:left;margin:2px 2px 10px}
 .lgb{width:100%;border:0;border-radius:14px;padding:14px;font:700 15px Inter,system-ui,sans-serif;color:#1c1b2e;cursor:pointer;background:var(--lime);box-shadow:inset 0 1px 0 rgba(255,255,255,.45),0 10px 20px -10px var(--lime2)}.lgb:hover{background:var(--lime2)}
-@media(prefers-reduced-motion:reduce){.lgo,.lgc{transition-duration:.01s}.lgc{transform:none}}
+@media(prefers-reduced-motion:reduce){.lgo,.lgc{transition-duration:.01s}.lgc{transform:none}}.lgb{transition:transform .15s ease,background-color .2s,opacity .2s}.lgb:active{transform:scale(.98)}.lgb:disabled,.lgb.busy{opacity:.65;cursor:default}.lgc .err{min-height:18px;transition:opacity .2s}.lgc .err:empty{opacity:0}
 .lgl{display:flex;flex-direction:column;gap:10px;margin-bottom:16px}
 .lgr{display:flex;align-items:center;gap:12px;width:100%;border:0;background:var(--soft);color:var(--ink);border-radius:14px;padding:13px 14px;font:600 14px Inter,system-ui,sans-serif;text-align:left;cursor:pointer}.lgr span{flex:1}.lgr svg:last-child{color:var(--mut)}.lgr:hover{background:var(--ln)}
 .mb{z-index:13}
@@ -1005,12 +1005,12 @@ function zSt(w,d){const r=S.at[w.id+'|'+d];if(w.jd&&d<w.jd)return'N';if(r&&r.s)r
 const zMi=x=>+x.slice(0,2)*60+ +x.slice(3,5);
 function zAuto(r){if(r.m||!r.i)return;const h=r.o?(zMi(r.o)-zMi(r.i))/60:null;r.s=(S.ps.hh>0&&h!==null&&h<S.ps.hh)?'H':'P';r.src='machine'}
 function zScan(w,ts){const d=ts.slice(0,10),t=ts.slice(11,16),r=S.at[w.id+'|'+d]=S.at[w.id+'|'+d]||{},a=[r.i,r.o,t].filter(Boolean).sort(),l=a[a.length-1];r.i=a[0];r.o=zMi(l)-zMi(r.i)>1?l:undefined;zAuto(r)}
-let PW=null,ZBS='idle',ZBT=0;
+let PW=null,ZBS='idle',ZBT=0,ZSEQ=0;const zMs=t=>new Date(String(t).replace(' ','T')).getTime();
 function zToast(t){let e=$('ztoast');if(!e){e=document.createElement('div');e.id='ztoast';document.body.appendChild(e)}e.textContent=t;e.className='show';clearTimeout(e._t);e._t=setTimeout(()=>e.className='',4000)}
 function fpEvent(id,ts,src){id=String(id).trim();if(!id)return;ts=String(ts||zNow()).replace('T',' ').slice(0,19);if(ts.length==16)ts+=':00';
  if(S.sc.some(x=>x.fp==id&&x.t==ts))return'dup';
  if(PW&&!$('mdl').querySelector('#pw_st,#pw_e'))PW=null;
- if(PW){if(PW.busy)return'busy';if(ts>=PW.at){S.sc.push({t:ts,fp:id,w:0,src:'payout'});pwEvent(id,ts);return'pay'}}
+ if(PW){if(PW.busy)return'busy';if(ts>=PW.at||(ZSEQ>PW.s0&&zMs(ts)>=zMs(PW.at)-6e5)){S.sc.push({t:ts,fp:id,w:0,src:'payout'});pwEvent(id,ts);return'pay'}}
  const w=S.wdb.find(x=>x.fp!==undefined&&x.fp!==''&&String(x.fp)==id);S.sc.push({t:ts,fp:id,w:w?w.id:0,src:src||'machine'});if(S.sc.length>600)S.sc=S.sc.slice(-600);
  if(w){zScan(w,ts);P();zToast(w.n+' scanned at '+ts.slice(11,16));if(tab=='sal'&&(sub.sl||'list')=='list')render();if(WD&&$('wdwc'))wdR()}
  else if(!S.col.some(c=>String(c.id)==id)){if(!S.un.some(u=>u.id==id))S.un.push({id,t:ts});P();zAsk()}
@@ -1022,7 +1022,7 @@ function unSv(){const u=S.un[0],a=$('un_w').value;if(!a){$('un_e').textContent='
  if(a!='none'){const w=zW(a);w.fp=u.id;const sc=S.sc.filter(x=>x.fp==u.id&&!x.w);sc.forEach(x=>{x.w=w.id;zScan(w,x.t)})}else S.col.push({id:u.id,n:'(ignored)',rel:'Ignored',fw:0,on:zNow(),by:zWho()});
  S.un.shift();P();X();render();setTimeout(zAsk,300)}
 /* ---- Payout by fingerprint ---- */
-function pwOpen(no){const s=S.sb.find(x=>x.no==no);if(!s||s.paid)return;PW={no,at:zNow()};const w=zW(s.w)||{};
+function pwOpen(no){const s=S.sb.find(x=>x.no==no);if(!s||s.paid)return;PW={no,at:zNow(),s0:S.br.seq||0};setTimeout(brPoll,50);const w=zW(s.w)||{};
  fmM({ic:IC.wdb,t:'Waiting for the fingerprint',s:'Ask '+s.wn+' to place a finger on the machine. The salary is released after the machine recognises the person.',e:'pw_e',ok:'Stop waiting',fn:'pwStop()',f:`<div id="pw_st" style="padding:14px;border-radius:16px;background:#e8f5d8;font-weight:600">Waiting for a scan...${w.fp?'':'<br><small>'+es(s.wn)+' has no fingerprint ID yet. A scan from someone else will be treated as another person.</small>'}</div>${zOwn()?`<button class="g s" style="margin-top:12px" onclick="pwSkip()">Paid without a scan (owner only)</button>`:''}`,h:s.wn,meta:[['Bill',s.no],['Month',zMn(s.m)]],rows:[['Fingerprint ID on machine',w.fp||'-']],tot:['Amount to pay',zRs(s.c.pay)]})}
 function pwStop(){PW=null;X()}
 function pwSkip(){if(!zOwn()||!PW)return;const s=S.sb.find(x=>x.no==PW.no);PW.busy=1;fmM({ic:WN_,t:'Paid without a scan',s:'Only use this when the machine cannot be used. The reason is written on the bill.',e:'pw_e',ok:'Release salary',fn:'pwSkip2()',f:F('ns_r','Why is there no fingerprint?'),h:s.wn,meta:[['Bill',s.no]],rows:[['Approved by',zWho()]],tot:['Amount',zRs(s.c.pay)]})}
@@ -1120,8 +1120,8 @@ function brRst(){S.br.seq=0;P();brPoll();render()}
 function brSet(on){const u=v('br_u').trim().replace(/\/$/,''),f=v('br_f');if(u)S.br.url=u;if(on&&(!S.br.on||f)){S.br.from=(f||D())+' 00:00:00'}S.br.on=on;P();if(on)brPoll();render()}
 function tsSim(){const i=v('ts_i').trim();if(!i){$('ts_e').textContent='Enter a machine ID.';return}const t=v('ts_t');fpEvent(i,t?t.replace('T',' ')+':00':zNow(),'test');P();render()}
 function tsFile(el){const f=el.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{let n=0,sk=0;const from=($('br_f')&&v('br_f')||'');String(r.result).split(/\r?\n/).forEach(l=>{const m=l.match(/(\d+)\D+?(\d{4}-\d\d-\d\d)[ T](\d\d:\d\d)(:\d\d)?/);if(!m)return;const ts=m[2]+' '+m[3]+(m[4]||':00');if(from&&m[2]<from){sk++;return}const a=fpEvent(m[1],ts,'file');if(a=='ok')n++});P();render();zToast(n+' scans loaded'+(sk?', '+sk+' older ones skipped':''))};r.readAsText(f)}
-async function brPoll(){if(!S.br.on)return;try{const r=await fetch(S.br.url.replace(/\/$/,'')+'/events?after='+(S.br.seq||0),{cache:'no-store'}),j=await r.json();ZBS='ok';ZBT=Date.now();if(typeof j.last=='number'&&j.last<(S.br.seq||0)){S.br.seq=0;P()}(j.events||[]).forEach(e=>{S.br.seq=Math.max(S.br.seq||0,e.seq||0);const t=String(e.time).replace('T',' ');if(S.br.from&&t<S.br.from)return;{const l=new Date(Date.now()+6e5);if(t>l.toLocaleDateString('en-CA')+' '+l.toLocaleTimeString('en-GB'))return}fpEvent(e.id,t,'machine')});P()}catch(e){ZBS='down'}const b=$('brst');if(b){b.textContent=ZBS=='ok'?'Connected':'Bridge not reachable';b.className='tg '+(ZBS=='ok'?'ok':'bad')}}
-setInterval(brPoll,5000);
+async function brPoll(){if(!S.br.on)return;try{const r=await fetch(S.br.url.replace(/\/$/,'')+'/events?after='+(S.br.seq||0),{cache:'no-store'}),j=await r.json();ZBS='ok';ZBT=Date.now();if(typeof j.last=='number'&&j.last<(S.br.seq||0)){S.br.seq=0;P()}(j.events||[]).forEach(e=>{S.br.seq=Math.max(S.br.seq||0,e.seq||0);ZSEQ=e.seq||0;const t=String(e.time).replace('T',' ');if(S.br.from&&t<S.br.from)return;{const l=new Date(Date.now()+6e5);if(t>l.toLocaleDateString('en-CA')+' '+l.toLocaleTimeString('en-GB'))return}fpEvent(e.id,t,'machine')});ZSEQ=0;P()}catch(e){ZBS='down'}{const q=$('pw_st');if(q&&PW&&!PW.busy)q.firstChild.textContent=ZBS=='ok'?'Waiting for a scan...':'Cannot reach the fingerprint bridge on this PC. Check that it is running.'}const b=$('brst');if(b){b.textContent=ZBS=='ok'?'Connected':'Bridge not reachable';b.className='tg '+(ZBS=='ok'?'ok':'bad')}}
+setInterval(brPoll,5000);setInterval(()=>{if(PW&&!PW.busy)brPoll()},1500);
 /* ---- Salary page ---- */
 V.sal=()=>{if(!U)return'';const k=sub.sl||'month',tb=[['month','Monthly salary'],['extra','Extra duties'],['adv','Cash advances'],['adj','Additions / deductions'],['rec','Saved bills']];if(zOwn())tb.push(['set','Settings']);
  return tabs('sl',tb)+({month:zSalM,extra:zExtra,adv:zAdv,adj:zAdj,rec:zRec,set:zSet}[k]||zSalM)()};
@@ -1353,10 +1353,11 @@ async function sbFlush(){clearTimeout(SBT);if(!SB_ON||!SBP)return;const rows=[],
  if(!rows.length){sbSt('ok');return}
  try{const {error}=await SB.from('app_state').upsert(rows);if(error)throw error;rows.forEach(r=>SBLP[r.key]=js[r.key]);sbSt('ok')}catch(e){sbSt('er',String(e.message||e).slice(0,60));SBT=setTimeout(sbFlush,5000)}}
 function sbGate(msg,busy){let g=$('sbg');if(!g){g=document.createElement('div');g.id='sbg';document.body.appendChild(g)}
- g.innerHTML=`<div class="lgo show" style="z-index:999;background:var(--bg,#f2f2f6)"><div class="lgc">${S.co&&S.co.logo?`<img class="lgim" src="${S.co.logo}" alt="">`:''}<h2>Sign in</h2><p class="mu">Kawya Enterprises</p><div class="lgf"><input id="sbe" type="text" placeholder="Username" autocomplete="username" autocapitalize="none" onkeydown="if(event.key==='Enter')$('sbp').focus()"></div><div class="lgf"><input id="sbp" type="password" placeholder="Password" autocomplete="current-password" onkeydown="if(event.key==='Enter')sbIn()"></div><div class="err" id="sbm">${es(msg||'')}</div><button class="lgb" ${busy?'disabled':''} onclick="sbIn()">${busy?'Please wait...':'Sign in'}</button></div></div>`;
- if(!busy&&!msg){const e=$('sbe');if(e)e.focus()}}
-async function sbIn(){const un=v('sbe').toLowerCase(),em=SBMAIL[un]||(un.includes('@')?un:''),pw=$('sbp').value;if(!un||!pw){$('sbm').textContent='Enter your username and password.';return}if(!em){$('sbm').textContent='Wrong username or password.';return}
- $('sbm').textContent='';const {error}=await SB.auth.signInWithPassword({email:em,password:pw});if(error){sbGate('Wrong username or password.');return}await sbStart()}
+ if(!$('sbe')){g.innerHTML=`<div class="lgo show sbgate" style="z-index:999;background:var(--bg,#f2f2f6)"><div class="lgc" style="opacity:1;transform:none">${S.co&&S.co.logo?`<img class="lgim" src="${S.co.logo}" alt="">`:''}<h2>Sign in</h2><p class="mu">Kawya Enterprises</p><div class="lgf"><input id="sbe" type="text" placeholder="Username" autocomplete="username" autocapitalize="none" onkeydown="if(event.key==='Enter')$('sbp').focus()"></div><div class="lgf"><input id="sbp" type="password" placeholder="Password" autocomplete="current-password" onkeydown="if(event.key==='Enter')sbIn()"></div><div class="err" id="sbm"></div><button class="lgb" id="sbb" onclick="sbIn()">Sign in</button></div></div>`}
+ $('sbm').textContent=msg||'';const b=$('sbb');b.disabled=!!busy;b.classList.toggle('busy',!!busy);b.textContent=busy?'Please wait...':'Sign in';
+ if(!busy){const p=$('sbp');if(msg&&p){p.value='';p.focus()}else if(!msg&&!$('sbe').value)$('sbe').focus()}}
+async function sbIn(){if($('sbb')&&$('sbb').disabled)return;const un=v('sbe').toLowerCase(),em=SBMAIL[un]||(un.includes('@')?un:''),pw=$('sbp').value;if(!un||!pw){$('sbm').textContent='Enter your username and password.';return}if(!em){$('sbm').textContent='Wrong username or password.';return}
+ sbGate('',1);const {error}=await SB.auth.signInWithPassword({email:em,password:pw});if(error){sbGate('Wrong username or password.');return}await sbStart()}
 async function sbOut(){try{await sbFlush()}catch(e){}try{await SB.auth.signOut()}catch(e){}try{localStorage.removeItem(K)}catch(e){}location.reload()}
 async function sbStart(){sbGate('',1);
  try{const {data:u}=await SB.auth.getUser();if(!u||!u.user)throw 0;
@@ -1369,7 +1370,7 @@ async function sbStart(){sbGate('',1);
     Object.assign(S,srv);try{localStorage.setItem(K,JSON.stringify(S))}catch(e){}sessionStorage.setItem('kgsync','1');location.reload();return}
    Object.keys(srv).forEach(k=>{SBLP[k]=JSON.stringify(srv[k])})}
   sessionStorage.removeItem('kgsync');
-  const g=$('sbg');if(g)g.remove();rs();sbSt('ok');tab='home';render();sbLive()
+  rs();sbSt('ok');tab='home';render();sbLive();{const g=$('sbg');if(g){const o=g.firstElementChild;if(o)o.classList.add('out');setTimeout(()=>g.remove(),380)}}
  }catch(e){sbGate('Could not connect. Check the internet and try again.')}}
 async function sbFlushAll(){SBLP={};await sbFlush()}
 let SBCH=null,SBRT=0;
@@ -1384,9 +1385,10 @@ if(SB_ON){
   (async()=>{const {data}=await SB.auth.getSession();if(data&&data.session)sbStart();else sbGate('')})()};
  if(window.supabase)boot();else{sbGate('Loading...',1);let n=0;const t=setInterval(()=>{if(window.supabase){clearInterval(t);boot()}else if(++n>75){clearInterval(t);sbGate('Could not load the sign-in system. Check the internet and reload the page.')}},200)}
 }
-if(SB_ON){lgIn=async function(){if(Date.now()<FU){$('le').textContent='Too many attempts. Please wait a minute and try again.';return}
- const k=v('lu').toLowerCase().trim(),p=$('lp').value,em=SBMAIL[k]||(k.includes('@')?k:'');let ok=null;
- if(em&&p&&SBV){try{const {data,error}=await SBV.auth.signInWithPassword({email:em,password:p});if(!error&&data&&data.user){const r=await SBV.from('profiles').select('username,name,role').eq('id',data.user.id).maybeSingle();if(r.data)ok=r.data}}catch(e){}try{await SBV.auth.signOut()}catch(e){}}
+if(SB_ON){let LGB=0;lgIn=async function(){if(LGB)return;if(Date.now()<FU){$('le').textContent='Too many attempts. Please wait a minute and try again.';return}
+ const k=v('lu').toLowerCase().trim(),p=$('lp').value,em=SBMAIL[k]||(k.includes('@')?k:'');let ok=null;LGB=1;const bt=document.querySelector('.lgc .lgb');if(bt){bt.disabled=true;bt.classList.add('busy');bt.textContent='Signing in...'}$('le').textContent='';
+ if(em&&p&&SBV){try{const {data,error}=await SBV.auth.signInWithPassword({email:em,password:p});if(!error&&data&&data.user){const r=await SBV.from('profiles').select('username,name,role').eq('id',data.user.id).maybeSingle();if(r.data)ok=r.data}}catch(e){}try{SBV.auth.signOut()}catch(e){}}
+ LGB=0;if(bt){bt.disabled=false;bt.classList.remove('busy');bt.textContent='Sign in'}
  if(ok){FA=0;U={k:ok.username,n:ok.name,r:ok.role};X();rs();const w=PEND;PEND=null;tab=w||(U.k=='kawya'&&(S.ar||[]).some(r=>r.st=='Pending')?'apr':U.r=='owner'?'fin':'cust');if(tab=='cfg'&&U.r!='owner')tab='cust';render();return}
  FA++;if(FA>=5){FA=0;FU=Date.now()+60000;$('le').textContent='Too many attempts. Please wait a minute and try again.'}else $('le').textContent='Wrong username or password.';$('lp').value=''}}
 
