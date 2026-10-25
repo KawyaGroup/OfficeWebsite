@@ -1610,10 +1610,12 @@ function dcH(o){const C=S.co,hc=[['Phone',C.ph],['Email',C.em],['Address',C.ad]]
 ${o.note?`<div class="dnt">${dTx(o.note)}</div>`:''}
 <div class="dsgs">${sg}</div>
 <div class="dft"><b>${es(C.thanks||'')}</b><small>${es(C.terms||'')}</small>${o.foot?`<small>${es(o.foot)}</small>`:''}</div></div>`}
-function docOpen(html,title,wa){if(window.DOCCAP){window.DOCCAP(html);return}let o=$('dov');if(!o){o=document.createElement('div');o.id='dov';document.body.appendChild(o)}
+let DOCT0=null;
+function docFn(t){t=String(t||'Document');const st=/^(Bill|Quotation|Receipt) /.test(t)?'':' '+new Date().toLocaleString('sv-SE').replace(/:/g,'.').replace(' ','_');return(t+st).replace(/[\\/:*?"<>|]+/g,'-').replace(/\s+/g,' ').trim()}
+function docOpen(html,title,wa){if(window.DOCCAP){window.DOCCAP(html);return}if(DOCT0===null)DOCT0=document.title;document.title=docFn(title);let o=$('dov');if(!o){o=document.createElement('div');o.id='dov';document.body.appendChild(o)}
  o.innerHTML=`<div class="dbar"><div><b>${es(title)}</b><small>A4 colour. In the print window choose your inkjet printer and tick "Background graphics".</small></div><div class="dbb"><button class="b" onclick="window.print()">Print / Save PDF</button>${wa?`<button class="g" onclick="${wa}">WhatsApp</button>`:''}<button class="g" onclick="docClose()">Close</button></div></div><div class="kdsc" onclick="if(event.target===this)docClose()"><div class="dzw" id="dzw">${html}</div></div>`;
  o.className='on';document.body.style.overflow='hidden';dFit()}
-function docClose(){const o=$('dov');if(o){o.className='';o.innerHTML=''}document.body.style.overflow=''}
+function docClose(){if(DOCT0!==null){document.title=DOCT0;DOCT0=null}const o=$('dov');if(o){o.className='';o.innerHTML=''}document.body.style.overflow=''}
 function dFit(){const z=$('dzw');if(z)z.style.zoom=Math.min(1,(innerWidth-24)/794)}
 addEventListener('resize',dFit);addEventListener('keydown',e=>{if(e.key=='Escape'&&$('dov')&&$('dov').className=='on')docClose()});
 /* ---- bill / invoice ---- */
@@ -1627,11 +1629,11 @@ function dInv(b){const sub=b.it.reduce((a,i)=>a+i.q*i.p,0),c=b.c||{},rts=S.rt.fi
  const tot=[['Sub total',f(sub)]];if(b.dc)tot.push(['Discount','- '+f(b.dc)]);if(b.tf)tot.push(['Transport fee','+ '+f(b.tf)]);if(b.xt)tot.push(['Exchange items','+ '+f(b.xt)]);if(b.ret)tot.push(['Returned goods credit','- '+f(b.ret)]);tot.push(['TOTAL',f(nt(b)),'g'],['Paid',f(pd(b))],[ba>0.004?'Balance due':'Balance',f(Math.max(ba,0)),ba>0.004?'w':'b']);
  return dcH({brand:dvN(b.dv),title:'BILL',to:{n:c.n,lines:['Phone: '+(c.p||'-'),c.i?'NIC: '+c.i:'',c.a?'Address: '+c.a:'']},meta:[['Bill no',b.no],['Date',b.d+(b.t?' '+b.t:'')],['Section',dvN(b.dv)],['Payment',b.m],['Status',ba>0.004?'Balance due':'Fully paid']],cols:[{h:'Item description'},{h:'Price',a:'r'},{h:'Qty',a:'c'},{h:'Total',a:'r'}],rows,totals:tot,
  info:[{h:'Payment info',lines:[`Method: <b>${es(b.m||'-')}</b>`].concat(pays,ch)},{h:'Delivery',lines:dv},{h:'Returns and exchanges',lines:rl}],sign:['Office assistant','Customer']})}
-function showBill(b){docOpen(dInv(b),'Bill '+b.no,`waB('${b.no}')`)}
+function showBill(b){docOpen(dInv(b),'Bill '+b.no+' - '+(b.c&&b.c.n||''),`waB('${b.no}')`)}
 /* ---- payment receipt ---- */
 function dPay(no,i){const b=bn_(no),x=b&&b.pays[i];if(!x)return;const run=b.pays.slice(0,i+1).reduce((a,p)=>a+p.a,0);
  docOpen(dcH({title:x.a<0?'REFUND NOTE':'PAYMENT RECEIPT',to:{n:b.c.n,lines:['Phone: '+(b.c.p||'-'),b.c.i?'NIC: '+b.c.i:'']},toH:x.a<0?'Paid back to':'Received from',meta:[['Bill no',b.no],['Date',x.d],['Method',x.m],['Receipt',b.no+'/'+(i+1)]],cols:[{h:'Description'},{h:'Amount',a:'r'}],rows:[[{h:`<b>${x.a<0?'Money paid back':'Payment received'}</b><small>For bill ${es(b.no)}</small>`},f(Math.abs(x.a))]],
- totals:[['Order value',f(nt(b))],['Paid up to this receipt',f(run)],[x.a<0?'Refunded':'Received now',f(Math.abs(x.a)),'g'],['Balance after this',f(Math.max(nt(b)-run,0)),nt(b)-run>0.004?'w':'b']],sign:['Office assistant','Customer']}),'Receipt '+b.no)}
+ totals:[['Order value',f(nt(b))],['Paid up to this receipt',f(run)],[x.a<0?'Refunded':'Received now',f(Math.abs(x.a)),'g'],['Balance after this',f(Math.max(nt(b)-run,0)),nt(b)-run>0.004?'w':'b']],sign:['Office assistant','Customer']}),'Receipt '+b.no+'-'+(i+1)+' - '+b.c.n)}
 /* ---- customer statement ---- */
 function dCust(){const k=CK,c=S.cu[k];if(!c)return;const bs=S.bl.filter(b=>b.k==k),bi=bs.reduce((a,b)=>a+nt(b),0),pa=bs.reduce((a,b)=>a+pd(b),0);
  docOpen(dcH({title:'STATEMENT',to:{n:c.n,lines:['Phone: '+(c.p||'-'),c.i?'NIC: '+c.i:'',c.a?'Address: '+c.a:'']},toH:'Customer',meta:[['Printed',D()],['Customer since',c.since||'-'],['Bills',String(bs.length)]],cols:[{h:'Bill'},{h:'Date'},{h:'Details'},{h:'Billed',a:'r'},{h:'Paid',a:'r'},{h:'Balance',a:'r'}],
@@ -1785,7 +1787,7 @@ function hDoc(h){const pd=hPd(h),ba=hBal(h),pys=(h.pys||[]).map(x=>`${es(x.d)} �
   rows:[[{h:`<b>Vehicle hire · ${es(h.ve||'')}</b><small>${es((h.fr||'Kawya Group yard')+' to '+(h.to||'-'))}${h.wt?' · '+es(h.wt):''}</small>`},f(h.fee),'1',f(h.fee)]],
   totals:[['Hire charge',f(h.fee)],['TOTAL',f(h.fee),'g'],['Paid',f(pd)],[ba>0.004?'Balance due':'Balance',f(Math.max(ba,0)),ba>0.004?'w':'b']],
   info:[{h:'Payment info',lines:pys.length?pys:['No payment yet']},{h:'Trip details',lines:['Vehicle: '+es(h.ve||'-'),'Driver: '+es(h.dr||'-')+(h.dph?' ('+es(h.dph)+')':''),h.as?'Assistants: '+es(h.as):'',h.dd?'Left the yard: '+es(h.dd)+(h.dt?' '+es(h.dt):''):'',h.done?'Completed: '+es(h.done)+(h.dtm?' '+es(h.dtm):''):''].filter(Boolean)},{h:'Note',lines:h.nt?[es(h.nt)]:[]}],sign:['Office assistant','Customer']})}
-function hrBill(n){const h=hrF(n);if(!h)return;docOpen(hDoc(h),'Bill '+h.no,`hrW('${n}','c')`)}
+function hrBill(n){const h=hrF(n);if(!h)return;docOpen(hDoc(h),'Bill '+h.no+' - '+h.cn,`hrW('${n}','c')`)}
 
 /* ---- Quotations ---- */
 const QS={Open:['Open','#dcdaf8','#3c3790'],Accepted:['Accepted','#e1f3a6','#3b5a00'],Declined:['Declined','#fde0d2','#a4400f']};
@@ -1804,7 +1806,7 @@ function qDel2(no){S.qt=ZA('qt').filter(x=>x.no!=no);P();X();render()}
 function qDoc(q){const sub=qSub(q),rows=(q.it||[]).map(i=>[{h:`<b>${es(i.n)}</b><small>${[i.cd,i.u?'per '+i.u:''].filter(Boolean).map(es).join(' · ')}</small>`},f(i.p),String(i.q),f((+i.q||0)*(+i.p||0))]),tot=[['Sub total',f(sub)]];if(+q.dc)tot.push(['Discount','- '+f(q.dc)]);if(+q.tf)tot.push(['Transport fee','+ '+f(q.tf)]);tot.push(['TOTAL',f(qTot(q)),'g']);
  return dcH({brand:'Enterprises',title:'QUOTATION',toH:'Quotation for',to:{n:q.cn,lines:['Phone: '+(q.cp||'-'),q.ca?'Address: '+q.ca:'']},meta:[['Quote no',q.no],['Date',q.d],['Valid until',qExp(q)],['Prepared by',q.by||'-']],cols:[{h:'Item description'},{h:'Price',a:'r'},{h:'Qty',a:'c'},{h:'Total',a:'r'}],rows,totals:tot,
   info:[{h:'Delivery',lines:(q.to||q.fr)?['From: '+es(q.fr||'Kawya Group yard'),'To: '+es(q.to||'-'),+q.tf?'Transport fee: '+f(q.tf):'']:[]},{h:'Terms',lines:['Prices are valid until '+es(qExp(q))+'.','This is a quotation, not a bill. Stock is not reserved.','The final amount can change if the quantity or the delivery place changes.']},{h:'Note',lines:q.nt?[es(q.nt)]:[]}],sign:['Prepared by','Customer acceptance']})}
-function qView(no){const q=qF(no);if(q)docOpen(qDoc(q),'Quotation '+no,`qWa('${no}')`)}
+function qView(no){const q=qF(no);if(q)docOpen(qDoc(q),'Quotation '+no+' - '+q.cn,`qWa('${no}')`)}
 function qWa(no){const q=qF(no);if(!q)return;wa(q.cp,`Hello ${q.cn}, this is Kawya Group.\nQuotation ${q.no} (${q.d}), valid until ${qExp(q)}\n`+q.it.map(i=>`${i.n} x ${i.q} @ ${f(i.p)} = ${f(i.q*i.p)}`).join('\n')+(+q.dc?`\nDiscount: - ${f(q.dc)}`:'')+(+q.tf?`\nTransport fee: ${f(q.tf)}`:'')+`\nTOTAL: ${f(qTot(q))}\nThis is a quotation, not a bill.`)}
 const qBl=()=>({it:[{n:'',q:1,p:''}],cn:'',cp:'',ca:'',vd:14,tf:'',dc:'',fr:'Kawya Group yard',to:'',nt:'',ed:''});
 function qO(){QF=qBl();qDraw()}
