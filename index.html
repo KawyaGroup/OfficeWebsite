@@ -453,6 +453,15 @@ button:hover>svg:not(.dwave){transform:scale(1.12)}
 .card:hover,.xrow:hover{transform:translateY(-2px)}
 .rin>*{animation:rowIn .45s cubic-bezier(.22,1,.36,1) both}.rin>*:nth-child(2){animation-delay:.04s}.rin>*:nth-child(3){animation-delay:.08s}.rin>*:nth-child(4){animation-delay:.12s}.rin>*:nth-child(5){animation-delay:.16s}.rin>*:nth-child(n+6){animation-delay:.2s}
 @media (prefers-reduced-motion:reduce){.ic-pop svg,.ic-gear svg,.nav button.ic-nav svg,.ib.hasal::after,.rin>*{animation:none!important}}
+
+/* ===== smooth lift on hover / drag (Apple style) ===== */
+@media (hover:hover){
+table tr:not(:first-child),.xrow,.zen,.nt,.lgr,.spc,.rcv,.sti,.zl,.dib{transition:transform .38s cubic-bezier(.34,1.45,.64,1),box-shadow .38s ease,background-color .25s ease;will-change:transform}
+table tr:not(:first-child):hover{transform:translateY(-3px) scale(1.004);box-shadow:0 12px 26px -12px rgba(30,29,45,.35);background:var(--card);position:relative;z-index:2}
+.xrow:hover,.zen:hover,.nt:hover,.lgr:hover,.spc:hover{transform:translateY(-3px) scale(1.006);box-shadow:0 14px 28px -14px rgba(30,29,45,.4);position:relative;z-index:2}
+table tr:not(:first-child):active,.xrow:active,.zen:active,.nt:active,.lgr:active{transform:translateY(-1px) scale(.994);box-shadow:0 6px 14px -8px rgba(30,29,45,.35);transition-duration:.12s}
+}
+@media (prefers-reduced-motion:reduce){table tr,.xrow,.zen,.nt,.lgr,.spc{transition:none!important;transform:none!important}}
 .phbad{border-color:#e5484d!important;box-shadow:0 0 0 3px rgba(229,72,77,.15)!important}
 .phe{display:block;color:#e5484d;font-size:11.5px;margin-top:4px;font-weight:600}
 .kdlg{width:auto;max-width:60mm;object-fit:contain;background:rgba(255,255,255,.95);border-radius:8px;padding:3px}
@@ -1795,12 +1804,14 @@ function qEdit(no){const q=qF(no);if(!q)return;QF={it:q.it.map(i=>({n:i.n,q:i.q,
 function qSync(){if(!QF)return;const g=id=>($(id)||{}).value;['cn','cp','ca','vd','tf','dc','fr','to','nt'].forEach(k=>{const e=$('qf_'+k);if(e)QF[k]=e.value});QF.it.forEach((i,j)=>{const e=$('qi'+j);if(!e)return;const nm=e.value,m=qMatch(nm);const pv=$('qp'+j);i.n=nm;i.q=$('qq'+j).value;if(m&&i.auto!==nm){i.auto=nm;if(!(+pv.value>0)||i.fromStock){pv.value=m.p;i.fromStock=1}i.cd=m.cd||'';i.u=m.u||''}i.p=pv.value;const t=$('qt'+j);if(t)t.textContent=f((+i.q||0)*(+i.p||0))});qTotals()}
 const qMatch=nm=>{nm=String(nm||'').trim().toLowerCase();if(!nm)return null;return S.st.find(x=>!x.dm&&(String(x.n).toLowerCase()==nm||(x.cd&&String(x.cd).toLowerCase()==nm)))};
 function qTotals(){const q={it:QF.it,dc:QF.dc,tf:QF.tf},e=$('qtot');if(e)e.innerHTML=`<div>Sub total <b>${f(qSub(q))}</b></div>${+QF.dc?`<div>Discount <b>- ${f(QF.dc)}</b></div>`:''}${+QF.tf?`<div>Transport fee <b>+ ${f(QF.tf)}</b></div>`:''}<div class="qg">TOTAL <b>${f(qTot(q))}</b></div>`}
-function qAddRow(){qSync();QF.it.push({n:'',q:1,p:''});qDraw()}
-function qRmRow(j){qSync();if(QF.it.length>1)QF.it.splice(j,1);qDraw()}
+const qRow=(i,j)=>`<div class="qrw"><input id="qi${j}" list="qdl" placeholder="Any item - in stock or not" value="${es(i.n)}"><input id="qq${j}" type="number" min="0" step="any" value="${es(i.q)}"><input id="qp${j}" type="number" min="0" step="any" placeholder="0" value="${es(i.p)}"><b id="qt${j}">${f((+i.q||0)*(+i.p||0))}</b><button class="ico" type="button" title="Remove row" onclick="qRmRow(${j})">×</button></div>`,
+ qRows=()=>QF.it.map(qRow).join('');
+function qAddRow(){qSync();QF.it.push({n:'',q:1,p:''});const j=QF.it.length-1,h=document.createElement('div');h.innerHTML=qRow(QF.it[j],j);const r=h.firstElementChild;r.style.animation='rowIn .3s ease both';$('qrows').appendChild(r);const e=$('qi'+j);if(e)e.focus({preventScroll:false});qTotals()}
+function qRmRow(j){qSync();if(QF.it.length>1)QF.it.splice(j,1);else QF.it=[{n:'',q:1,p:''}];$('qrows').innerHTML=qRows();qTotals()}
 function qDraw(){const dl=`<datalist id="qdl">${S.st.filter(x=>!x.dm).map(x=>`<option value="${es(x.n)}">${es((x.cd?x.cd+' · ':'')+f(x.p))}</option>`).join('')}</datalist>`;
- M(`<h2>${QF.ed?'Edit quotation '+es(QF.ed):'New quotation'}</h2><p class="mu" style="margin:-4px 0 12px;font-size:13px">Does not change the stock. Choose a stock item to fill the price, or type your own item and price.</p><div class="qfm" oninput="qSync()">
+ M(`<h2>${QF.ed?'Edit quotation '+es(QF.ed):'New quotation'}</h2><p class="mu" style="margin:-4px 0 12px;font-size:13px">Does not change the stock. Pick a stock item to fill the price, or type any other item and its price - items that are not in our stock are fine.</p><div class="qfm" oninput="qSync()">
 <div class="fg">${F('qf_cn','Customer name','text',es(QF.cn))}${F('qf_cp','Phone','tel',es(QF.cp))}${F('qf_ca','Address (optional)','text',es(QF.ca))}${F('qf_vd','Valid for (days)','number',es(QF.vd))}</div>
-<h3 style="font-size:15px;margin:14px 0 6px">Items</h3>${dl}<div class="qhd"><span>Item or item code</span><span>Qty</span><span>Price</span><span>Total</span><span></span></div>${QF.it.map((i,j)=>`<div class="qrw"><input id="qi${j}" list="qdl" placeholder="Item name" value="${es(i.n)}"><input id="qq${j}" type="number" min="0" step="any" value="${es(i.q)}"><input id="qp${j}" type="number" min="0" step="any" placeholder="0" value="${es(i.p)}"><b id="qt${j}">${f((+i.q||0)*(+i.p||0))}</b><button class="ico" title="Remove row" onclick="qRmRow(${j})">×</button></div>`).join('')}<button class="g s" style="margin:8px 0" onclick="qAddRow()">+ Add item</button>
+<h3 style="font-size:15px;margin:14px 0 6px">Items</h3>${dl}<div class="qhd"><span>Item or item code</span><span>Qty</span><span>Price</span><span>Total</span><span></span></div><div id="qrows">${qRows()}</div><button class="g s" type="button" style="margin:8px 0" onclick="qAddRow()">+ Add item</button>
 <h3 style="font-size:15px;margin:14px 0 6px">Delivery and total</h3><div class="fg">${F('qf_fr','Deliver from','text',es(QF.fr))}${F('qf_to','Deliver to (place)','text',es(QF.to))}${F('qf_tf','Transport fee (Rs.)','number',es(QF.tf))}${F('qf_dc','Discount (Rs.)','number',es(QF.dc))}</div>${F('qf_nt','Note for the customer (optional)','text',es(QF.nt))}
 <div class="err" id="q_e"></div></div><div class="qtt" id="qtot"></div><div style="display:flex;gap:10px;margin-top:12px"><button class="b" onclick="qSave()">Save quotation</button></div>`);qTotals()}
 function qSave(){qSync();const e=$('q_e'),it=QF.it.filter(i=>String(i.n).trim()&&+i.q>0);if(!QF.cn.trim()){e.textContent='Enter the customer name.';return}if(!it.length){e.textContent='Add at least one item with a quantity.';return}if(it.some(i=>!(+i.p>=0)||i.p==='')){e.textContent='Enter the price of every item.';return}
