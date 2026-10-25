@@ -1894,6 +1894,26 @@ if(SB_ON){let LGB=0;lgIn=async function(){if(LGB)return;if(Date.now()<FU){$('le'
  if(ok){FA=0;U={k:ok.username,n:ok.name,r:ok.role};X();rs();const w=PEND;PEND=null;tab=w||(U.k=='kawya'&&(S.ar||[]).some(r=>r.st=='Pending')?'apr':U.r=='owner'?'fin':'cust');if(tab=='cfg'&&U.r!='owner')tab='cust';render();return}
  FA++;if(FA>=5){FA=0;FU=Date.now()+60000;$('le').textContent='Too many attempts. Please wait a minute and try again.'}else $('le').textContent='Wrong username or password.';$('lp').value=''}}
 
+const LRG=[
+ {k:'a',t:'Bills, customers, quotations, returns, outside hires, approvals',a:['bl','qt','rt','oh','ar','cu'],c:['n','tn','qn','rtn','hrn','arn'],on:1},
+ {k:'b',t:'Payments, purchases, supplies, cash entries, closed days',a:['pu','sp','oc','pay','cm','dc'],c:['pn'],z:{cof:0},on:1},
+ {k:'c',t:'Salary records, attendance, target work, one-day workers, advances',a:['sb','tp','tg','pa','pj','px','sc','col','cd','cp','cw','at','pwo'],c:['sbn','tpn','cpn','cn'],wk:1,on:1},
+ {k:'d',t:'Stock history (the log of stock going in and out)',a:['sl'],c:[],on:1},
+ {k:'e',t:'Stock counts: set every item to 0 and remove damaged and cut-piece items',a:['dm','cut'],c:['dmn','dsn'],stk:1,on:0}];
+const lrN=g=>g.a.reduce((n,k)=>{const v=S[k];return n+(Array.isArray(v)?v.length:v&&typeof v=='object'?Object.keys(v).length:0)},0)+(g.stk?(S.st||[]).filter(x=>(+x.q||0)!=0).length:0);
+function lrCard(){if(!zKaw())return'';return`<div class="card" style="margin-top:14px;border:1.5px solid #f0b8b0"><h3>Launch reset: delete test data</h3><p class="mu" style="font-size:13px;margin:-6px 0 12px">Use this once, before the real work starts. It removes the data you tick below from the site and the online database. Your users and passwords, company details, workers list, stock items and prices, fleet, holidays and salary settings are kept. A backup file is downloaded first.</p>${LRG.map(g=>`<label style="display:flex;gap:10px;align-items:flex-start;margin:8px 0;font-size:14px"><input type="checkbox" id="lr_${g.k}"${g.on?' checked':''} style="margin-top:3px;width:auto"><span>${g.t}<br><small class="mu">${lrN(g)} record${lrN(g)==1?'':'s'} now</small></span></label>`).join('')}<div class="bar" style="margin-top:12px"><button class="b" style="background:#d6453b" onclick="lrAsk()">Delete selected data...</button></div></div>`}
+function lrAsk(){if(!zKaw())return;const sel=LRG.filter(g=>$('lr_'+g.k)&&$('lr_'+g.k).checked);if(!sel.length){alert('Tick at least one group.');return}
+ zQ({t:'Delete the test data?',s:'This cannot be undone. A backup file will download first.',ok:'Delete now',fn:'lrGo()',f:F('lr_t','Type DELETE to confirm'),h:'Launch reset',meta:[['Groups',String(sel.length)]],rows:sel.map(g=>[g.t.split(',')[0],lrN(g)+' records'])})}
+async function lrGo(){if(!zKaw())return;const sel=LRG.filter(g=>$('lr_'+g.k)&&$('lr_'+g.k).checked);if(!sel.length)return;
+ if(v('lr_t').trim()!=='DELETE'){$('zq_e').textContent='Type DELETE (capital letters) to confirm.';return}
+ try{bkFile()}catch(e){}
+ sel.forEach(g=>{g.a.forEach(k=>{if(S[k]===undefined)return;S[k]=Array.isArray(S[k])?[]:(k=='pwo'?null:{})});g.c.forEach(k=>{if(S[k]!=null)S[k]=1});if(g.z)Object.keys(g.z).forEach(k=>S[k]=g.z[k]);
+  if(g.wk)(S.wk||[]).forEach(x=>{if(Array.isArray(x.e))x.e=[]});
+  if(g.stk){S.st=(S.st||[]).filter(x=>!/ - damaged DS-\d+/.test(x.n||'')).map(x=>Object.assign(x,{q:0}))}});
+ if(S.pwo===null)S.pwo={};
+ P();try{if(typeof sbFlush=='function')await sbFlush()}catch(e){}
+ X();render();okM({t:'Test data deleted',s:'The site is clean. A backup file was downloaded.',h:'Launch reset',meta:[['Groups',String(sel.length)]]})}
+const _zBak=zBak;zBak=function(){return _zBak()+lrCard()};
 /* ---- Automatic daily backup ---- */
 if(S.bh==null)S.bh=19;
 let BKST='';
