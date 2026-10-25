@@ -1543,15 +1543,15 @@ async function sbIn(){if($('sbb')&&$('sbb').disabled)return;const un=v('sbe').to
  sbGate('',1);const {error}=await SB.auth.signInWithPassword({email:em,password:pw});if(error){sbGate('Wrong username or password.');return}await sbStart()}
 async function sbOut(){try{await sbFlush()}catch(e){}try{await SB.auth.signOut()}catch(e){}try{localStorage.removeItem(K)}catch(e){}location.reload()}
 async function sbStart(){if($('sbg'))sbGate('',1);
- try{const {data:u}=await SB.auth.getUser();if(!u||!u.user)throw 0;
-  const {data:pr,error:pe}=await SB.from('profiles').select('username,name,role').eq('id',u.user.id).maybeSingle();if(pe||!pr){await SB.auth.signOut();sbGate('This account is not set up for the site. Ask Kawya.');return}
-  const {data:rows,error:re}=await SB.from('app_state').select('key,value');if(re)throw re;
+ try{const {data:ss}=await SB.auth.getSession(),u={user:ss&&ss.session&&ss.session.user};if(!u.user)throw 0;
+  const [{data:pr,error:pe},{data:rows,error:re}]=await Promise.all([SB.from('profiles').select('username,name,role').eq('id',u.user.id).maybeSingle(),SB.from('app_state').select('key,value')]);if(pe||!pr){await SB.auth.signOut();sbGate('This account is not set up for the site. Ask Kawya.');return}
+  if(re)throw re;
   SBP={k:pr.username,n:pr.name,r:pr.role};
   if(SBKEEP&&rows.length){SBKEEP=0;rows.forEach(r=>{const loc=JSON.stringify(S[r.key]);if(SBLP[r.key]===undefined||loc===SBLP[r.key]){S[r.key]=r.value;SBLP[r.key]=JSON.stringify(r.value)}});try{localStorage.setItem(K,JSON.stringify(S))}catch(e){}await sbFlush()}   // after an expired sign-in: keep what was not saved yet
   else if(!rows.length){SBLP={};await sbFlushAll()}   // first run: upload this browser's data
   else{const srv={};rows.forEach(r=>srv[r.key]=r.value);const cn=x=>JSON.stringify(x,(k,y)=>y&&typeof y=='object'&&!Array.isArray(y)?Object.keys(y).sort().reduce((q,z)=>(q[z]=y[z],q),{}):y),df=Object.keys(srv).some(k=>cn(S[k])!==cn(srv[k]));
    if(df&&!sessionStorage.getItem('kgsync')){try{const old=localStorage.getItem(K);if(old)localStorage.setItem(K+'_before_sync',old)}catch(e){}
-    Object.assign(S,srv);try{localStorage.setItem(K,JSON.stringify(S))}catch(e){}sessionStorage.setItem('kgsync','1');location.reload();return}
+    Object.assign(S,srv);try{localStorage.setItem(K,JSON.stringify(S))}catch(e){}}
    Object.keys(srv).forEach(k=>{SBLP[k]=JSON.stringify(srv[k])})}
   sessionStorage.removeItem('kgsync');
   rs();sbSt('ok');tab='home';render();sbLive();{const g=$('sbg');if(g){const o=g.firstElementChild;if(o)o.classList.add('out');setTimeout(()=>g.remove(),380)}}
