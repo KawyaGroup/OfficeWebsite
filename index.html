@@ -2046,14 +2046,29 @@ if(SB_ON){let LGB=0;lgIn=async function(){if(LGB)return;if(Date.now()<FU){$('le'
  FA++;if(FA>=5){FA=0;FU=Date.now()+60000;$('le').textContent='Too many attempts. Please wait a minute and try again.'}else $('le').textContent=(LGE&&!/invalid login/i.test(LGE))?'Could not sign in: '+LGE.slice(0,120):'Wrong username or password.';$('lp').value=''}}
 
 const LRG=[
- {k:'a',t:'Bills, customers, quotations, returns, outside hires, approvals',a:['bl','qt','rt','oh','ar','cu'],c:['n','tn','qn','rtn','hrn','arn'],on:1},
- {k:'b',t:'Payments, purchases, supplies, cash entries, closed days',a:['pu','sp','oc','pay','cm','dc'],c:['pn'],z:{cof:0},on:1},
- {k:'c',t:'Salary records, attendance, target work, one-day workers, advances',a:['sb','tp','tg','pa','pj','px','sc','col','cd','cp','cw','at','pwo'],c:['sbn','tpn','cpn','cn'],wk:1,on:1},
- {k:'d',t:'Stock history (the log of stock going in and out)',a:['sl'],c:[],on:1},
- {k:'e',t:'Stock counts: set every item to 0 and remove damaged and cut-piece items',a:['dm','cut'],c:['dmn','dsn'],stk:1,on:0},
- {k:'f',t:'Stock items: remove EVERY stock item and its price (add the real items again afterwards)',a:['st'],c:[],on:0}];
+ {k:'a1',s:'Sales and customers',t:'Bills',a:['bl'],c:['n','tn']},
+ {k:'a2',s:'Sales and customers',t:'Customers',a:['cu'],c:[]},
+ {k:'a3',s:'Sales and customers',t:'Quotations',a:['qt'],c:['qn']},
+ {k:'a4',s:'Sales and customers',t:'Returns',a:['rt'],c:['rtn']},
+ {k:'a5',s:'Sales and customers',t:'Outside hires',a:['oh'],c:['hrn']},
+ {k:'a6',s:'Sales and customers',t:'Approvals',a:['ar'],c:['arn']},
+ {k:'b1',s:'Money',t:'Purchases',a:['pu'],c:['pn']},
+ {k:'b2',s:'Money',t:'Supplies',a:['sp'],c:[]},
+ {k:'b3',s:'Money',t:'Supplier payment orders',a:['oc'],c:[]},
+ {k:'b4',s:'Money',t:'Salary payment history (paid list)',a:['pay'],c:[]},
+ {k:'b5',s:'Money',t:'Cash entries (also resets the opening cash)',a:['cm'],c:[],z:{cof:0}},
+ {k:'b6',s:'Money',t:'Closed days',a:['dc'],c:[]},
+ {k:'c1',s:'Salary and workers',t:'Salary records',a:['sb'],c:['sbn']},
+ {k:'c2',s:'Salary and workers',t:'Attendance (in and out times)',a:['at'],c:[],wk:1},
+ {k:'c3',s:'Salary and workers',t:'Target jobs',a:['tg'],c:[]},
+ {k:'c4',s:'Salary and workers',t:'Target and monthly pay slips',a:['tp'],c:['tpn']},
+ {k:'c5',s:'Salary and workers',t:'Advances',a:['pa'],c:[]},
+ {k:'c6',s:'Salary and workers',t:'One-day workers and their payments',a:['pj','px','sc','col','cd','cp','cw','pwo'],c:['cpn','cn']},
+ {k:'d',s:'Stock',t:'Stock history (the log of stock going in and out)',a:['sl'],c:[]},
+ {k:'e',s:'Stock',t:'Stock counts: set every item to 0 and remove damaged and cut-piece items',a:['dm','cut'],c:['dmn','dsn'],stk:1},
+ {k:'f',s:'Stock',t:'Stock items: remove EVERY stock item and its price (add the real items again afterwards)',a:['st'],c:[]}];
 const lrN=g=>g.a.reduce((n,k)=>{const v=S[k];return n+(Array.isArray(v)?v.length:v&&typeof v=='object'?Object.keys(v).length:0)},0)+(g.stk?(S.st||[]).filter(x=>(+x.q||0)!=0).length:0);
-function lrCard(){if(!zKaw())return'';return`<div class="card" style="margin-top:14px;border:1.5px solid #f0b8b0"><h3>Launch reset: delete test data</h3><p class="mu" style="font-size:13px;margin:-6px 0 12px">Use this before the real work starts. Each line below is deleted separately with its own button, and it removes that data from the site and the online database. Your users and passwords, company details, workers list, stock items and prices, fleet, holidays and salary settings are kept. A backup file is downloaded first.</p>${LRG.map(g=>`<div style="display:flex;gap:12px;align-items:center;justify-content:space-between;margin:10px 0;padding:10px 12px;border:1px solid var(--ln);border-radius:14px;font-size:14px"><span>${g.t}<br><small class="mu">${lrN(g)} record${lrN(g)==1?'':'s'} now</small></span><button class="b" style="background:#d6453b;flex:0 0 auto" onclick="lrAsk('${g.k}')">Delete...</button></div>`).join('')}</div>`}
+function lrCard(){if(!zKaw())return'';return`<div class="card" style="margin-top:14px;border:1.5px solid #f0b8b0"><h3>Launch reset: delete test data</h3><p class="mu" style="font-size:13px;margin:-6px 0 12px">Use this before the real work starts. Each line below is deleted separately with its own button, and it removes that data from the site and the online database. Your users and passwords, company details, workers list, stock items and prices, fleet, holidays and salary settings are kept. A backup file is downloaded first.</p>${LRG.map((g,i)=>(i==0||LRG[i-1].s!=g.s?`<h4 style="margin:16px 0 4px;font-size:13px;color:var(--mut);text-transform:uppercase;letter-spacing:.06em">${g.s}</h4>`:'')+`<div style="display:flex;gap:12px;align-items:center;justify-content:space-between;margin:10px 0;padding:10px 12px;border:1px solid var(--ln);border-radius:14px;font-size:14px"><span>${g.t}<br><small class="mu">${lrN(g)} record${lrN(g)==1?'':'s'} now</small></span><button class="b" style="background:#d6453b;flex:0 0 auto" onclick="lrAsk('${g.k}')">Delete...</button></div>`).join('')}</div>`}
 function lrAsk(k){if(!zKaw())return;const sel=LRG.filter(g=>g.k==k);if(!sel.length)return
  zQ({t:'Delete this data?',s:'This cannot be undone. A backup file will download first.',ok:'Delete now',fn:"lrGo('"+k+"')",f:F('lr_t','Type DELETE to confirm'),h:'Launch reset',meta:[['Deleting',sel[0].t.split(',')[0]]],rows:sel.map(g=>[g.t.split(',')[0],lrN(g)+' records'])})}
 async function lrGo(k){if(!zKaw())return;const sel=LRG.filter(g=>g.k==k);if(!sel.length)return;
