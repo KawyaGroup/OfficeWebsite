@@ -1170,7 +1170,7 @@ const pe=S.ar.filter(r=>r.st=='Pending'),dn=rgF('ard',S.ar.filter(r=>r.st!='Pend
 return `<div class="sg"><div class="card"><small class="mu">Waiting for your approval</small><h2>${pe.length}</h2></div><div class="card"><small class="mu">Decided so far</small><h2>${S.ar.length-pe.length}</h2></div></div><div class="card"><h2>Stock reduction requests</h2>${O(pe,r=>`<div class="hb" style="margin-bottom:10px"><div class="hbt"><div><b>${es(r.n)} − ${r.q} ${es(r.u||'')}</b><small>${r.no} · ${r.d} ${es(r.t||'')}</small></div><span class="tg bad">${es(r.re)}</span></div><div class="hbi">${es(r.nt)||'<span class="mu">No note</span>'}${r.re=='Damaged in our yard'?'<br><b>'+dlTxt(r)+'</b>':''}</div><div class="hbf"><span>Requested by <b>${es(r.by)}</b></span><span>In stock now <b>${es(cur(r))}</b></span></div><div class="hba"><button class="b s" onclick="arD('${r.no}',1)">Approve</button><button class="g s" onclick="arD('${r.no}',0)">Reject</button></div></div>`)||'<p class="mu">Nothing waiting. New requests from the Stock page appear here.</p>'}</div><div class="card w"><h3>Decisions</h3>${rgBar('ard')}<table><tr><th>No<th>Date<th>Item<th>Qty<th>Reason<th>By<th>Decision<th>Note</tr>${O(dn,r=>`<tr><td>${r.no}<td>${r.d}<td>${es(r.n)}<td>${r.q}<td>${es(r.re)}<td>${es(r.by)}<td>${r.st=='Approved'?'<span class="tg">Approved</span>':'<span class="tg bad">Rejected</span>'}<td>${es(r.dn||'')}</tr>`)||'<tr><td>No decisions yet.</tr>'}</table></div>`};
 
 /* ===== Stock flow v2: stock leaves on hand-over / delivery, order details, returns, damaged items ===== */
-S.rt=S.rt||[];S.dm=S.dm||[];S.cut=S.cut||[];S.sh=S.sh||[];S.cn=S.cn||1;S.tn=S.tn||1;sub.k='main';let OPEN='';
+if(!S.abf)S.abf=zTm();S.rt=S.rt||[];S.dm=S.dm||[];S.cut=S.cut||[];S.sh=S.sh||[];S.cn=S.cn||1;S.tn=S.tn||1;sub.k='main';let OPEN='';
 if(!S.v2){S.bl.forEach(b=>{b.it.forEach(i=>{if(i.s==null)i.s=S.st.findIndex(x=>x.n==i.n)});if(!b.so)b.so=b.d;if(b.tr=='No'&&!b.cl)b.cl='done';b.ret=b.ret||0;b.xt=b.xt||0});S.v2=1;P()}
 /* qty billed but not yet issued from the yard */
 const rv=i=>S.bl.reduce((a,b)=>b.so?a:a+b.it.reduce((x,l)=>l.s==i?x+(+l.q||0):x,0),0);
@@ -1401,7 +1401,8 @@ function zFMjd(k){const T=k/1236.85,r=Math.PI/180,E=1-0.002516*T-0.0000074*T*T,
  return jd+c}
 function zEst(y){const o=[],b=Math.floor((y-2000)*12.3685);for(let k=b-2;k<=b+16;k++){const il=(zFMjd(k+0.5)-2440587.5)*864e5+5.5*36e5;for(const off of[-1,0]){const x=new Date(il+off*864e5),ss=Date.UTC(x.getUTCFullYear(),x.getUTCMonth(),x.getUTCDate(),18,10);if(ss<=il&&ss>il-864e5){const d=x.getUTCFullYear()+'-'+zp(x.getUTCMonth()+1)+'-'+zp(x.getUTCDate());if(d.slice(0,4)==y&&!o.includes(d))o.push(d)}}}return o.sort()}
 /* ---- Day status, scans ---- */
-function zSt(w,d){const r=S.at[w.id+'|'+d];if(w.jd&&d<w.jd)return'N';if(r&&r.s)return r.s;if(zIsP(d)||zSH(d))return'O';const t=D();if(d>t)return'F';if(d==t)return'T';return'A'}
+function zSt(w,d){const r=S.at[w.id+'|'+d];if(w.jd&&d<w.jd)return'N';if(r&&r.s)return r.s;if(zIsP(d)||zSH(d))return'O';const t=D();if(d>t)return'F';if(d<t&&S.abf&&d>=S.abf)return'A';return'T'}
+function zTm(){const d=new Date(D()+'T00:00:00Z');d.setUTCDate(d.getUTCDate()+1);return d.toISOString().slice(0,10)}
 const zMR=()=>S.ps.ml==null?200:+S.ps.ml,zMl=(w,d)=>{if(!w||!w.ml)return 0;const s=zSt(w,d);return(s=='P'||s=='H')&&!((S.at[w.id+'|'+d]||{}).fd)?zMR():0};
 const zMi=x=>+x.slice(0,2)*60+ +x.slice(3,5);
 function zAuto(r){if(r.m||!r.i)return;const h=r.o?(zMi(r.o)-zMi(r.i))/60:null;r.s=(S.ps.hh>0&&h!==null&&h<S.ps.hh)?'H':'P';r.src='machine'}
@@ -1511,7 +1512,7 @@ function wpf(id){if(!U){lgM();return}const w=zW(id);if(!w)return;const s=zSl(id,
 ${old.length?`<h3 style="margin:14px 0 6px">Saved bills</h3>${old.map(x=>`<div style="display:flex;justify-content:space-between;padding:6px 0;border-top:1px solid var(--line,#0001)"><span>${x.no} · ${zMn(x.m)}</span><span>${zRs(x.c.pay)} ${x.paid?'<span class="tg ok">Paid</span>':'<span class="tg bad">Waiting</span>'} <button class="g s" onclick="zView('${x.no}')">View</button></span></div>`).join('')}`:''}`)}
 /* ---- Attendance page ---- */
 let ATD=D(),AMn=D().slice(0,7),AY=+D().slice(0,4),SM=D().slice(0,7);
-const zStT={P:['Present','ok'],H:['Half day','wn'],A:['Absent','bad'],O:['Poya holiday','mu'],T:['Not scanned yet','mu'],F:['','mu'],N:['Not joined','mu']};
+const zStT={P:['Present','ok'],H:['Half day','wn'],A:['Absent','bad'],O:['Poya holiday','mu'],T:['No record','mu'],F:['','mu'],N:['Not joined','mu']};
 function zMark(id,d,s){if(zLk(id,d)){zToast('That day is already released, so it is locked.');return}const k=id+'|'+d;if(s=='C'){const r=S.at[k];if(r){delete r.m;if(r.i)zAuto(r);else if(r.fd){delete r.s;delete r.by;delete r.src}else delete S.at[k]}}else{const r=S.at[k]=S.at[k]||{};r.s=s;r.m=1;r.by=zWho();if(!r.src)r.src='manual'}P();render()}
 function zCyc(id,d){const w=zW(id),r=S.at[id+'|'+d],cur=r&&r.m?r.s:'';if(w.jd&&d<w.jd)return;const n={'':'P',P:'H',H:'A',A:'C'}[cur];if(!cur&&d>D())return;zMark(id,d,n)}
 V.att=()=>{if(!U)return'';const k=sub.at||'today';return tabs('at',[['today','Day'],['month','Month'],['poya','Poya days'],['sh','Special holidays'],['dev','Fingerprint machine']])+({today:zToday,month:zMonth,poya:zPoya,sh:zSHl,dev:zDev}[k])()};
@@ -2059,7 +2060,7 @@ const LRG=[
  {k:'b5',s:'Money',t:'Cash entries (also resets the opening cash)',a:['cm'],c:[],z:{cof:0}},
  {k:'b6',s:'Money',t:'Closed days',a:['dc'],c:[]},
  {k:'c1',s:'Salary and workers',t:'Salary records',a:['sb'],c:['sbn']},
- {k:'c2',s:'Salary and workers',t:'Attendance (in and out times)',a:['at'],c:[],wk:1},
+ {k:'c2',s:'Salary and workers',t:'Attendance (in and out times)',a:['at'],c:[],wk:1,ab:1},
  {k:'c3',s:'Salary and workers',t:'Target jobs',a:['tg'],c:[]},
  {k:'c4',s:'Salary and workers',t:'Target and monthly pay slips',a:['tp'],c:['tpn']},
  {k:'c5',s:'Salary and workers',t:'Advances',a:['pa'],c:[]},
@@ -2075,7 +2076,7 @@ async function lrGo(k){if(!zKaw())return;const sel=LRG.filter(g=>g.k==k);if(!sel
  if(v('lr_t').trim()!=='DELETE'){$('zq_e').textContent='Type DELETE (capital letters) to confirm.';return}
  try{bkFile()}catch(e){}
  sel.forEach(g=>{g.a.forEach(k=>{if(S[k]===undefined)return;S[k]=Array.isArray(S[k])?[]:(k=='pwo'?null:{})});g.c.forEach(k=>{if(S[k]!=null)S[k]=1});if(g.z)Object.keys(g.z).forEach(k=>S[k]=g.z[k]);
-  if(g.wk)(S.wk||[]).forEach(x=>{if(Array.isArray(x.e))x.e=[]});
+  if(g.ab)S.abf=zTm();if(g.wk)(S.wk||[]).forEach(x=>{if(Array.isArray(x.e))x.e=[]});
   if(g.stk){S.st=(S.st||[]).filter(x=>!/ - damaged DS-\d+/.test(x.n||'')).map(x=>Object.assign(x,{q:0}))}});
  if(S.pwo===null)S.pwo={};
  P();try{if(typeof sbFlush=='function')await sbFlush()}catch(e){}
