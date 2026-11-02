@@ -415,8 +415,6 @@ input:focus,select:focus{border-color:var(--lime);box-shadow:0 0 0 4px color-mix
 .zdh{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}.zin{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;align-items:center;margin-bottom:10px}.zbt{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6px}.tdc h4{margin:14px 0 6px;font-size:13px}.zfr{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1.4fr) minmax(0,1fr) auto;gap:8px}.zfr:has(#wd_aa){grid-template-columns:minmax(0,1fr) minmax(0,1.6fr) auto}.zfr input,.zfr select{min-width:0}
 .zen{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-top:1px solid rgba(120,120,140,.15);font-size:13px}.zch{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.zcg{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}.zcw{text-align:center;font-size:11px;color:var(--mut);padding:2px 0}
 .zcd{aspect-ratio:1;display:grid;place-items:center;border-radius:11px;cursor:pointer;font-size:13px;font-weight:600;position:relative;border:0;padding:0;color:inherit}.zcd.zsel{outline:2px solid #0a74f0;outline-offset:1px}
-table tr,tbody tr,table tr:hover,tbody tr:hover,table tr:active,tbody tr:active,table tr:not(:first-child):hover{transform:none!important;will-change:auto!important;box-shadow:none!important;transition:background-color .2s ease!important}
-tbody tr.zr:hover,tbody tr[onclick]:hover{background:rgba(120,120,170,.10)!important;cursor:pointer}
 .calc .zcd{aspect-ratio:auto;height:34px;font-size:12.5px}.calc .zcd i{bottom:3px}.calc .zcg{gap:3px}.zcd.ztd{box-shadow:inset 0 0 0 2px rgba(10,116,240,.5)}.zcd i{position:absolute;bottom:4px;display:flex;gap:3px}.ze,.za{display:inline-block;width:6px;height:6px;border-radius:50%}.ze{background:#0a74f0}.za{background:#f08a1c}
 .zlg{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;font-size:11px;color:var(--mut)}.zlg span{display:flex;align-items:center;gap:5px}.zlg u{display:inline-block;width:12px;height:12px;border-radius:4px;text-decoration:none}.zlg u.ze,.zlg u.za{width:8px;height:8px;border-radius:50%}
 .zsm{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-top:1px solid rgba(120,120,140,.15);font-size:13px}.zsm.zsn{font-size:16px;border-top:2px solid var(--ink)}
@@ -690,7 +688,6 @@ body.msh-open{overflow:hidden}
 @keyframes mGlow{0%,100%{box-shadow:0 0 0 0 rgba(197,240,31,.55)}50%{box-shadow:0 0 0 12px rgba(197,240,31,0)}}
 
 /* fast mode: no stacked blur, so dialogs never freeze weak PCs */
-.tdo{-webkit-backdrop-filter:none!important;backdrop-filter:none!important;background:rgba(16,14,30,.5)!important}
 .lite *,.lite *::before,.lite *::after{-webkit-backdrop-filter:none!important;backdrop-filter:none!important;transition-duration:.001s!important;animation-duration:.001s!important;animation-delay:0s!important;will-change:auto!important}
 </style><script>if(window.top!==window.self){try{window.top.location=window.self.location}catch(e){document.documentElement.innerHTML=""}}</script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.58.0/dist/umd/supabase.min.js" onerror="var x=document.createElement('script');x.src='https://unpkg.com/@supabase/supabase-js@2.58.0/dist/umd/supabase.min.js';document.head.appendChild(x)"></script>
 </head><body><div class="app"><aside class="side"><div class="prof" role="button" tabindex="0" title="Private area" onclick="pfM()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();pfM()}"><div class="pav">KG<span class="pk" id="pk"></span></div><b>Kawya Group</b><small>Concrete · Hardware · Transport</small></div><nav class="nav" id="nav"></nav><div class="dl"><button class="arr" onclick="hp()" title="Quick guide"><svg class="i" viewBox="0 0 24 24"><path d="M7 17L17 7M8 7h9v9"/></svg></button>Need help?<br>Open the quick guide<button class="bk" onclick="bk()"><svg class="i" viewBox="0 0 24 24" style="width:15px;height:15px"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></svg>Download backup</button></div></aside><main class="mn"><div class="top"><div class="tl"><h1 id="ttl"></h1><p id="sub"></p></div><div class="tr"><div class="srch"><svg class="i" viewBox="0 0 24 24" style="width:16px;height:16px"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input id="gs" placeholder="Search customer by NIC, name or phone" oninput="gsr(this)" onfocus="gsf(this)"></div><button class="ib" id="bl" title="Notifications" onclick="nf()"><svg class="i" viewBox="0 0 24 24" style="width:17px;height:17px"><path d="M6 17V11a6 6 0 1112 0v6l1.5 2h-15zM10 21h4"/></svg></button><button class="ib" id="thb" title="Light / dark" onclick="tg()"></button><button class="g ncb" onclick="go('tbill')" title="Bill that does not change the stock">Temporary bill</button><button class="b ncb" onclick="go('bill')">Create new bill</button><div class="avs">KG</div></div></div><div id="main"></div></main></div><div id="mdl"></div><div id="tdw"></div><div id="pvw"></div>
@@ -2261,9 +2258,9 @@ const calMarks=()=>{const r={};S.bl.forEach(b=>{const e=r[b.d]||(r[b.d]={n:0,s:0
 let SLM='',FDM='';
 function slDay(d){SLF=SLT=d;SLM=d.slice(0,7);render()}
 function slMv(k){SLM=calMv(SLM||D().slice(0,7),k);render()}
-function fdDay(d){sub.f='day';sub.fdd=d;FDM=d.slice(0,7);render()}
-function fdMv(k){FDM=calMv(FDM||(sub.fdd||D()).slice(0,7),k);render()}
-function fdCal(){const own=zOwn(),sel=sub.fdd||D();return calH({m:FDM||sel.slice(0,7),sel,marks:calMarks(),fn:'fdDay',mv:'fdMv',min:own?'':dAgo(6),max:D()})}
+function fnPickDay(d){sub.f='day';sub.fdd=d;FDM=d.slice(0,7);render()}
+function fnMoveMonth(k){FDM=calMv(FDM||(sub.fdd||D()).slice(0,7),k);render()}
+function fdCal(){const own=zOwn(),sel=sub.fdd||D();return calH({m:FDM||sel.slice(0,7),sel,marks:calMarks(),fn:'fnPickDay',mv:'fnMoveMonth',min:own?'':dAgo(6),max:D()})}
 /* ---- Sales list (Private area) ---- */
 let SLF='',SLT='',SLQ='',SLS='all';
 const slLim=()=>{const t=D(),x=new Date(t+'T00:00:00Z');x.setUTCDate(x.getUTCDate()-6);return x.toISOString().slice(0,10)};
@@ -2375,7 +2372,6 @@ const phBad=v=>{const d=String(v||'').replace(/\D/g,'');return d.length>0&&!(d.l
 function phChk(t){const d=String(t.value||'').replace(/\D/g,''),bad=d.length>0&&!(d.length==10||(d.length==11&&d.startsWith('94')));t.classList.toggle('phbad',bad);let m=t.parentNode&&t.parentNode.querySelector&&t.parentNode.querySelector('.phe');if(bad){if(!m){m=document.createElement('span');m.className='phe';t.insertAdjacentElement('afterend',m)}m.textContent='Invalid phone number'}else if(m)m.remove()}
 
 
-/* slow PC check: if frames are slow, switch off blur and animations */
-(function(){try{if(localStorage.getItem('klite')=='1'||/[?&]lite=1/.test(location.search)){document.documentElement.classList.add('lite');return}if(localStorage.getItem('klite')=='0')return}catch(e){}
- let n=0,t0=0,ts=[];const f=t=>{if(t0)ts.push(t-t0);t0=t;if(++n<25){requestAnimationFrame(f);return}ts.sort((a,b)=>a-b);const m=ts[ts.length>>1];if(m>40){document.documentElement.classList.add('lite');try{localStorage.setItem('klite','1')}catch(e){}}};setTimeout(()=>requestAnimationFrame(f),2500)})();
+/* optional fast mode: only when the address has ?lite=1 */
+(function(){try{localStorage.removeItem('klite');if(/[?&]lite=1/.test(location.search))document.documentElement.classList.add('lite')}catch(e){}})();
 </script></body></html>
