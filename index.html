@@ -689,7 +689,8 @@ body.msh-open{overflow:hidden}
 
 /* fast mode: no stacked blur, so dialogs never freeze weak PCs */
 .lite *,.lite *::before,.lite *::after{-webkit-backdrop-filter:none!important;backdrop-filter:none!important;transition-duration:.001s!important;animation-duration:.001s!important;animation-delay:0s!important;will-change:auto!important}
-</style><script>if(window.top!==window.self){try{window.top.location=window.self.location}catch(e){document.documentElement.innerHTML=""}}</script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.58.0/dist/umd/supabase.min.js" onerror="var x=document.createElement('script');x.src='https://unpkg.com/@supabase/supabase-js@2.58.0/dist/umd/supabase.min.js';document.head.appendChild(x)"></script>
+</style><script>if(window.top!==window.self){try{window.top.location=window.self.location}catch(e){document.documentElement.innerHTML=""}}</script><link rel="preconnect" href="https://zillkfpjontaswunagho.supabase.co" crossorigin><link rel="dns-prefetch" href="https://zillkfpjontaswunagho.supabase.co">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.58.0/dist/umd/supabase.min.js" onerror="var x=document.createElement('script');x.src='https://unpkg.com/@supabase/supabase-js@2.58.0/dist/umd/supabase.min.js';document.head.appendChild(x)"></script>
 </head><body><div class="app"><aside class="side"><div class="prof" role="button" tabindex="0" title="Private area" onclick="pfM()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();pfM()}"><div class="pav">KG<span class="pk" id="pk"></span></div><b>Kawya Group</b><small>Concrete · Hardware · Transport</small></div><nav class="nav" id="nav"></nav><div class="dl"><button class="arr" onclick="hp()" title="Quick guide"><svg class="i" viewBox="0 0 24 24"><path d="M7 17L17 7M8 7h9v9"/></svg></button>Need help?<br>Open the quick guide<button class="bk" onclick="bk()"><svg class="i" viewBox="0 0 24 24" style="width:15px;height:15px"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></svg>Download backup</button></div></aside><main class="mn"><div class="top"><div class="tl"><h1 id="ttl"></h1><p id="sub"></p></div><div class="tr"><div class="srch"><svg class="i" viewBox="0 0 24 24" style="width:16px;height:16px"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input id="gs" placeholder="Search customer by NIC, name or phone" oninput="gsr(this)" onfocus="gsf(this)"></div><button class="ib" id="bl" title="Notifications" onclick="nf()"><svg class="i" viewBox="0 0 24 24" style="width:17px;height:17px"><path d="M6 17V11a6 6 0 1112 0v6l1.5 2h-15zM10 21h4"/></svg></button><button class="ib" id="thb" title="Light / dark" onclick="tg()"></button><button class="g ncb" onclick="go('tbill')" title="Bill that does not change the stock">Temporary bill</button><button class="b ncb" onclick="go('bill')">Create new bill</button><div class="avs">KG</div></div></div><div id="main"></div></main></div><div id="mdl"></div><div id="tdw"></div><div id="pvw"></div>
 <script>
 /* ===== ONLINE DATABASE SETTINGS: paste your Supabase values between the quotes (see SETUP.md). Leave empty to keep working on this computer only. ===== */
@@ -2047,7 +2048,7 @@ zLogoApply();zLogoPrep();
 
 /* ---- Online database (Supabase) : shared data + real sign-in ---- */
 const SBMAIL={kawya:'kawyasniroshana@gmail.com',kumara:'kumara@kumara.lk',erandi:'erandi@erandi.lk'};let SBV=null;
-SB_ON=!!(KG_SB.url&&KG_SB.key);
+SB_ON=!!(KG_SB.url&&KG_SB.key);try{if(SB_ON)fetch(KG_SB.url+'/auth/v1/health',{headers:{apikey:KG_SB.key}}).catch(()=>{})}catch(e){}
 let SBP=null,SB=null,SBT=0,SBLP={},SBID=Math.random().toString(36).slice(2,8);
 function sbSt(k,m){let e=$('sbst');if(!e){e=document.createElement('div');e.id='sbst';e.style.cssText='position:fixed;left:12px;bottom:10px;z-index:12;font:600 11px Inter,system-ui,sans-serif;padding:5px 10px;border-radius:99px;background:var(--card,#fff);box-shadow:0 2px 10px rgba(0,0,0,.15);color:var(--mut,#666);pointer-events:none';document.body.appendChild(e)}
  const c={ok:['#2e9e55','Saved online'],sv:['#e0a000','Saving...'],er:['#c0392b','Not saved - '+(m||'offline')+'. Do not close the page.'],off:['#c0392b','Connection lost, reconnecting...']}[k];e.innerHTML=`<span style="color:${c[0]}">&#9679;</span> ${es(c[1])}`}
@@ -2075,10 +2076,10 @@ async function sbStart(){if($('sbg'))sbGate('',1);
   SBP={k:pr.username,n:pr.name,r:pr.role};sbIdle();
   if(SBKEEP&&rows.length){SBKEEP=0;rows.forEach(r=>{const R=SR||S,loc=JSON.stringify(R[r.key]);if(SBLP[r.key]===undefined||loc===SBLP[r.key]){R[r.key]=r.value;SBLP[r.key]=JSON.stringify(r.value)}});try{localStorage.setItem(K,JSON.stringify(SR||S))}catch(e){}await sbFlush()}   // after an expired sign-in: keep what was not saved yet
   else if(!rows.length){SBLP={};await sbFlushAll()}   // first run: upload this browser's data
-  else{const srv={};rows.forEach(r=>srv[r.key]=r.value);const cn=x=>JSON.stringify(x,(k,y)=>y&&typeof y=='object'&&!Array.isArray(y)?Object.keys(y).sort().reduce((q,z)=>(q[z]=y[z],q),{}):y),df=Object.keys(srv).some(k=>cn((SR||S)[k])!==cn(srv[k]));
+  else{const srv={};rows.forEach(r=>srv[r.key]=r.value);const cn=x=>JSON.stringify(x,(k,y)=>y&&typeof y=='object'&&!Array.isArray(y)?Object.keys(y).sort().reduce((q,z)=>(q[z]=y[z],q),{}):y),sj={};Object.keys(srv).forEach(k=>sj[k]=JSON.stringify(srv[k]));const df=Object.keys(srv).some(k=>{const lj=JSON.stringify((SR||S)[k]);return lj!==sj[k]&&cn((SR||S)[k])!==cn(srv[k])});
    if(df&&!sessionStorage.getItem('kgsync')){try{const old=localStorage.getItem(K);if(old)localStorage.setItem(K+'_before_sync',old)}catch(e){}
     Object.assign(SR||S,srv);try{localStorage.setItem(K,JSON.stringify(SR||S))}catch(e){}}
-   Object.keys(srv).forEach(k=>{SBLP[k]=JSON.stringify(srv[k])})}
+   Object.keys(srv).forEach(k=>{SBLP[k]=sj[k]})}
   sessionStorage.removeItem('kgsync');
   if(SBP.k=='admin')admOn();rs();sbSt('ok');tab='home';render();sbLive();{const g=$('sbg');if(g){const o=g.firstElementChild;if(o)o.classList.add('out');setTimeout(()=>g.remove(),380)}}
  }catch(e){sbGate('Could not connect. Check the internet and try again.')}}
