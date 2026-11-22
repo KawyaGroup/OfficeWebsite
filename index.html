@@ -756,6 +756,20 @@ body.msh-open{overflow:hidden}
 .kdc.kbig:not(.a5) .dsg b{font-size:14px}
 .kdc.kbig:not(.a5) .dsg small{font-size:11px}
 
+
+.kdc.kbig:not(.a5) .dbn2{font-size:32px}
+.kdc.kbig:not(.a5) .dti h1{font-size:30px}
+.kdc.kbig:not(.a5) .kdmx{min-width:0;width:auto}
+.kdc.kbig:not(.a5) .kdmx div{font-size:15px;line-height:1.35}
+.kdc.kbig:not(.a5) .kdmx div span{width:27mm}
+
+.kdc.kbig:not(.a5) .dct2 .dcr svg{color:var(--icc)!important;width:15px;height:15px}
+.kdc.kbig:not(.a5) .dct2 .dwa svg{width:16px;height:16px}
+.kdc.kbig:not(.a5) .dct2{font-size:12.5px;line-height:1.4}
+.kdc.kbig:not(.a5) .dbn2,.kdc.kbig:not(.a5) .dmt,.kdc.kbig:not(.a5) .dbt,.kdc.kbig:not(.a5) .dnt,.kdc.kbig:not(.a5) .dsgs,.kdc.kbig:not(.a5) .dft{padding-left:8mm;padding-right:8mm}
+.kdc.kbig:not(.a5) .dtb td:first-child,.kdc.kbig:not(.a5) .dtb th:first-child{padding-left:8mm}
+.kdc.kbig:not(.a5) .dtb td:last-child,.kdc.kbig:not(.a5) .dtb th:last-child{padding-right:8mm}
+.kdc.kbig:not(.a5) .dgt{padding-right:13mm}
 .kdc.kbig.kcmp:not(.a5) .dtb td{padding-top:6px;padding-bottom:6px}
 .kdc.kbig.kcmp:not(.a5) .dsgs{padding-top:6mm}
 .kdc.kbig.kcmp:not(.a5) .dsl{height:10mm}
@@ -2239,7 +2253,7 @@ const DTH={
 function dThemeKey(o){const t=String(o.title||'');if(o.theme)return o.theme;if(o.brand==='Transport'||/DELIVERY/.test(t))return'transport';if(/QUOTATION/.test(t))return'quote';if(/SALARY|PAY SLIP/.test(t))return'salary';if(/DAY END/.test(t))return'dayend';if(/PURCHASE/.test(t))return'purchase';if(/RETURN|REFUND/.test(t))return'returns';if(/STOCK|DAMAGED|CUT|PENDING|CHEQUES|HISTORY|REDUCTION/.test(t))return'stock';return'bill'}
 function dTheme(o){const k=DTH[dThemeKey(o)]||DTH.bill;return`--dk:${k[0]};--ac:${k[1]};--acx:${k[2]};--bg:${k[3]};--r1:${k[4]};--r2:${k[5]};--wv:${k[6]}`}
 const dIc=d=>`<svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="${d}"/></svg>`;
-function dCi(){const r=(d,t)=>`<div class="dcr">${dIc(d)}<span>${t}</span></div>`;
+function dCi(){let ci=0;const CC=['#e53935','#f39c12','#1e88e5'],r=(d,t)=>`<div class="dcr" style="--icc:${CC[ci++]||'#1e88e5'}">${dIc(d)}<span>${t}</span></div>`;
  return `<div class="dct2"><div>${r('M12 21s-7-6.2-7-11a7 7 0 1114 0c0 4.8-7 11-7 11zM12 12a2.5 2.5 0 100-5 2.5 2.5 0 000 5','No 1141/1, 94 Junction,<br>Opposite to the temple, Kanthale')}${r('M3 6h18v12H3zM3 7l9 6 9-6','Kawyagroup@gmail.com')}</div><div>${r('M5 4h4l2 5-2.5 1.5a11 11 0 005 5L15 13l5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2','0775859329<br>0761353656<br>0262246666')}${`<div class="dcr dwa"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-8.6 15.1L2 22l5-1.3A10 10 0 1012 2z" fill="#25D366"/><path d="M8.4 7.4c.3-.4.8-.3 1 .1l.7 1.5c.1.3 0 .5-.2.7l-.5.6c.6 1.2 1.6 2.1 2.8 2.7l.6-.6c.2-.2.5-.2.7-.1l1.5.8c.4.2.5.6.2 1-.6.8-1.6 1.1-2.6.8-2.6-.8-4.6-2.7-5.3-5.3-.1-.7.2-1.1.1-1.2z" fill="#fff"/></svg><span>0761353660</span></div>`}</div></div>`}
 function dcH(o){const C=S.co,hc=[['Phone',C.ph],['Email',C.em],['Address',C.ad]].filter(x=>String(x[1]||'').trim()),n=o.cols.length;
  const th=o.cols.map((c,i)=>`<th class="${i?'kdn':'kdl'} ${c.a=='r'?'r':c.a=='c'?'c':''}">${es(c.h)}</th>`).join(''),
@@ -2907,7 +2921,7 @@ function rtDateS(no){const r=S.rt.find(x=>x.no==no),to=v('rdt_d'),e=$('rdt_e'),b
  if(ZA('dq').some(x=>x.st=='Pending'&&x.ty=='rtdate'&&x.rt==no))return e.textContent='A request for this return is already waiting for Kawya.';
  dqNew({ty:'rtdate',rt:no,bill:r.bill,cn:r.c||'',fr:r.d,to,nt:v('rdt_n'),amt:r.credit});P();X();render();okM({t:'Request sent',s:'Kawya will see it in Approvals. The date changes after she approves it.'})}
 /* ---- new version check: every device gets the latest site ---- */
-const APPV='2026-11-22a';
+const APPV='2026-11-22c';
 async function verChk(){if(location.protocol=='file:')return;try{const r=await fetch(location.pathname+'?v='+Date.now(),{cache:'no-store'});if(!r.ok)return;const t=await r.text(),m=t.match(/const APPV='([^']+)'/);if(!m||m[1]==APPV)return;
  const busy=(typeof B!='undefined'&&B.length)||(typeof RF!='undefined'&&RF)||(document.getElementById('mdl')&&document.getElementById('mdl').innerHTML.trim());
  if(!busy){location.reload();return}
